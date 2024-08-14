@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+![Logo](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlXq4ZsN14u4EqQ8_D_MzE4-CArBH6GWWJ-w&s)
 
-First, run the development server:
+
+# PAPER HUB UTHM
+
+Full Stack Web App (PWA) based on my University Library that data were fetch for Learning Purpose
+
+
+
+## Tech Stack
+
+**Client:** Next Js, TailwindCSS
+
+**Server:** Node, Nest Js
+
+
+## Installation
+
+Install my-project with npm or pnpm
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+  cd paper-hub-uthm
+  pnpm install
+```
+    
+## Run Locally
+
+Clone the project
+
+```bash
+  git clone https://github.com/apiz23/paper-hub-uthm.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Go to the project directory
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+  cd paper-hub-uthm
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Install dependencies
 
-## Learn More
+```bash
+  npm install || pnpm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+Start the server
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+  npm run dev || pnpm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Environment Variables
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+To run this project, you will need to add the following environment variables to your .env file need to PM me to request it because this project i use my personal API for learning
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Contributions
+
+This project was developed with the help of resources from the [Universiti Tun Hussein Onn Malaysia (UTHM) library website](https://library.uthm.edu.my). Special thanks to the library staff and the extensive digital resources available, which were invaluable for research and development.
+
+If you have any questions or need further information about the resources used, feel free to contact me.
+
+
+
