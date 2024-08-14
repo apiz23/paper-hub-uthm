@@ -1,4 +1,16 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+	images: {
+		domains: ["upload.wikimedia.org"],
+	},
+	async rewrites() {
+		return [
+			{
+				source: "/api/:path*",
+				destination: "https://jg160007-api.vercel.app/:path*",
+			},
+		];
+	},
+};
 
 export default nextConfig;
