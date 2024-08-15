@@ -75,9 +75,9 @@ export default function CoursePage({
 		}
 	};
 	return (
-		<div className="min-h-screen px-2.5 md:px-20 mx-auto py-20">
+		<div className="min-h-screen px-2.5 md:px-20 mx-auto py-10">
 			<Drawer>
-				<h1 className="text-3xl font-bold my-6 ms-5">
+				<h1 className="text-3xl font-bold my-4 ms-5">
 					Results for &quot;{courseCode}&quot;
 				</h1>
 
