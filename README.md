@@ -1,5 +1,5 @@
 
-![Logo](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlXq4ZsN14u4EqQ8_D_MzE4-CArBH6GWWJ-w&s)
+![Logo](https://www.uthm.edu.my/joomlatools-files/docman-images/generated/4e732ced3463d06de0ca9a15b6153677.png)
 
 
 # PAPER HUB UTHM
