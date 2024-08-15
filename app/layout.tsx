@@ -6,6 +6,7 @@ import Navbar from "@/components/navbar";
 import DotPattern from "@/components/magicui/dot-pattern";
 import { cn } from "@/lib/utils";
 import Footer from "@/components/footer";
+import { toast, Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
+					<Toaster richColors position="top-right" />
 					<Navbar />
 					<div className="relative">
 						<DotPattern

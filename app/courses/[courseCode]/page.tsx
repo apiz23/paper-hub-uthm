@@ -5,7 +5,6 @@ import {
 	Card,
 	CardContent,
 	CardDescription,
-	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
@@ -20,10 +19,11 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import { Download, LoaderIcon, MoreHorizontal } from "lucide-react";
+import { Download, LoaderIcon } from "lucide-react";
 import { CourseCodeList, CourseData } from "@/lib/interface/interface";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export default function CoursePage({
 	params,
@@ -33,13 +33,13 @@ export default function CoursePage({
 	const { courseCode } = params;
 	const [courseList, setCourseList] = useState<CourseCodeList[]>([]);
 	const [courseData, setCourseData] = useState<CourseData | null>(null);
-	const [loading, setLoading] = useState(false); // Loading state
+	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
 		if (courseCode) {
 			const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 			const fetchCourseList = async () => {
-				setLoading(true); // Start loading
+				setLoading(true);
 				try {
 					const response = await fetch(
 						`${apiUrl}uthm-lib/list-courses-paper?query=${courseCode}`
@@ -52,7 +52,7 @@ export default function CoursePage({
 				} catch (error) {
 					console.error("Failed to fetch course list:", error);
 				} finally {
-					setLoading(false); // End loading
+					setLoading(false);
 				}
 			};
 			fetchCourseList();
@@ -74,11 +74,10 @@ export default function CoursePage({
 			console.error("Failed to fetch course details:", error);
 		}
 	};
-
 	return (
 		<div className="min-h-screen px-2.5 md:px-20 mx-auto py-20">
 			<Drawer>
-				<h1 className="text-3xl font-bold my-6">
+				<h1 className="text-3xl font-bold my-6 ms-5">
 					Results for &quot;{courseCode}&quot;
 				</h1>
 
@@ -87,12 +86,12 @@ export default function CoursePage({
 						<LoaderIcon className="animate-spin h-20 w-20" />
 					</div>
 				) : courseList.length > 0 ? (
-					<ScrollArea className="h-[70vh] p-2.5">
+					<ScrollArea className="h-[70vh] p-4">
 						<div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-3">
 							{courseList.map((course, index) => (
 								<Card
 									key={index}
-									className="dark:hover:bg-slate-800 hover:bg-slate-200"
+									className="dark:hover:bg-neutral-800 hover:bg-neutral-200"
 								>
 									<CardHeader>
 										<CardTitle className="text-lg">{course.title}</CardTitle>
@@ -103,8 +102,8 @@ export default function CoursePage({
 									<CardContent className="py-4 rounded-md shadow-md flex justify-end">
 										<DrawerTrigger>
 											<Button
-												variant="link"
-												className="cursor-pointer border shadow-sm dark:hover:bg-neutral-700 dark:text-white hover:bg-neutral-200"
+												variant="ghost"
+												className="cursor-pointer border shadow-sm"
 												onClick={() => fetchCourseDetails(course.link)}
 											>
 												View
@@ -139,22 +138,48 @@ export default function CoursePage({
 				<DrawerContent className="md:max-w-3xl mx-2 md:mx-auto">
 					<DrawerHeader>
 						<DrawerTitle className="text-3xl mb-10">
-							{courseData?.details["Title"]}
+							{typeof courseData?.details["Title"] === "string"
+								? courseData?.details["Title"]
+								: "-"}
 						</DrawerTitle>
 						<DrawerDescription>
 							<div className="flow-root">
 								<dl className="-my-3 text-left divide-y divide-gray-100 text-lg text-black dark:text-white">
 									<div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
 										<dt className="font-medium">Issue Date:</dt>
-										<dd className=" sm:col-span-2">
-											{courseData?.details["Issue Date"] || "-"}
+										<dd className="sm:col-span-2">
+											{typeof courseData?.details["Issue Date"] === "string"
+												? courseData?.details["Issue Date"]
+												: "-"}
 										</dd>
 									</div>
 
 									<div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
-										<dt className="font-medium0">Description:</dt>
+										<dt className="font-medium">Description:</dt>
 										<dd className="sm:col-span-2">
-											{courseData?.details["Description"] || "-"}
+											{typeof courseData?.details["Description"] === "string"
+												? courseData?.details["Description"]
+												: "-"}
+										</dd>
+									</div>
+
+									<div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
+										<dt className="font-medium">Author:</dt>
+										<dd className="sm:col-span-2">
+											{courseData?.details["Authors"] &&
+											typeof courseData.details["Authors"] !== "string"
+												? courseData.details["Authors"].data
+												: "-"}
+										</dd>
+									</div>
+
+									<div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
+										<dt className="font-medium">Collection:</dt>
+										<dd className="sm:col-span-2">
+											{courseData?.details["Appears in Collections"] &&
+											typeof courseData.details["Appears in Collections"] !== "string"
+												? courseData.details["Appears in Collections"].data
+												: "-"}
 										</dd>
 									</div>
 								</dl>

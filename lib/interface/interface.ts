@@ -1,5 +1,10 @@
+export interface CourseDetail {
+	data: string;
+	URL?: string;
+}
+
 export interface CourseDetails {
-	[key: string]: string;
+	[key: string]: string | CourseDetail | undefined;
 }
 
 export interface DownloadLink {
