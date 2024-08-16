@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useMemo, useCallback } from "react";
 import {
 	Card,
 	CardContent,
@@ -19,101 +19,160 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
+import {
+	Pagination,
+	PaginationContent,
+	PaginationItem,
+	PaginationLink,
+	PaginationEllipsis,
+	PaginationPrevious,
+	PaginationNext,
+} from "@/components/ui/pagination";
 import { Download, LoaderIcon } from "lucide-react";
 import { CourseCodeList, CourseData } from "@/lib/interface/interface";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import { toast } from "sonner";
+import { useQuery } from "react-query";
+import useRefreshOnResize from "@/components/refreshOnSize";
 
 export default function CoursePage({
 	params,
 }: {
 	params: { courseCode: string };
 }) {
+	useRefreshOnResize();
 	const { courseCode } = params;
-	const [courseList, setCourseList] = useState<CourseCodeList[]>([]);
 	const [courseData, setCourseData] = useState<CourseData | null>(null);
-	const [loading, setLoading] = useState(false);
+	const [currentPage, setCurrentPage] = useState(1);
 
-	useEffect(() => {
-		if (courseCode) {
-			const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-			const fetchCourseList = async () => {
-				setLoading(true);
-				try {
-					const response = await fetch(
-						`${apiUrl}uthm-lib/list-courses-paper?query=${courseCode}`
-					);
-					if (!response.ok) {
-						throw new Error("Network response was not ok");
-					}
-					const data = await response.json();
-					setCourseList(data);
-				} catch (error) {
-					console.error("Failed to fetch course list:", error);
-				} finally {
-					setLoading(false);
-				}
-			};
-			fetchCourseList();
+	const itemsPerPage = useMemo(() => {
+		if (typeof window !== "undefined") {
+			const width = window.innerWidth;
+			return width < 640 ? 3 : 15;
 		}
-	}, [courseCode]);
+		return 15;
+	}, [window.innerWidth]);
 
-	const fetchCourseDetails = async (link: string) => {
-		const apiUrl = "https://jg160007-api.vercel.app";
-		try {
+	const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+	const { data: courseList, isLoading: loadingCourseList } = useQuery(
+		["courseList", courseCode],
+		async () => {
 			const response = await fetch(
-				`${apiUrl}/uthm-lib/course-link-details?url=${link}`
+				`${apiUrl}uthm-lib/list-courses-paper?query=${courseCode}`
 			);
 			if (!response.ok) {
 				throw new Error("Network response was not ok");
 			}
-			const data = await response.json();
-			setCourseData(data);
-		} catch (error) {
-			console.error("Failed to fetch course details:", error);
+			return response.json();
+		},
+		{
+			enabled: !!courseCode,
+			onError: (error: any) => {
+				toast.error("Failed to fetch course list:", error);
+			},
+			staleTime: 300000,
 		}
-	};
-	return (
-		<div className="min-h-screen px-2.5 md:px-20 mx-auto py-10">
-			<Drawer>
-				<h1 className="text-3xl font-bold my-4 ms-5">
-					Results for &quot;{courseCode}&quot;
-				</h1>
+	);
 
-				{loading ? (
+	const fetchCourseDetails = useCallback(
+		async (link: string) => {
+			try {
+				const response = await fetch(
+					`${apiUrl}uthm-lib/course-link-details?url=${link}`
+				);
+				if (!response.ok) {
+					toast.error("Network response was not ok");
+				}
+				const data = await response.json();
+				setCourseData(data);
+			} catch (error: any) {
+				toast.error("Failed to fetch course details:", error);
+			}
+		},
+		[apiUrl]
+	);
+
+	const paginatedCourseList = useMemo(() => {
+		const startIndex = (currentPage - 1) * itemsPerPage;
+		const endIndex = startIndex + itemsPerPage;
+		return courseList?.slice(startIndex, endIndex);
+	}, [courseList, currentPage, itemsPerPage]);
+
+	const courseListCards = useMemo(() => {
+		return paginatedCourseList?.map((course: CourseCodeList, index: number) => (
+			<Card key={index} className="dark:hover:bg-neutral-800 hover:bg-neutral-200">
+				<CardHeader>
+					<CardTitle className="text-lg">{course.title}</CardTitle>
+					<CardDescription className="shadow-none">{course.author}</CardDescription>
+				</CardHeader>
+				<CardContent className="py-4 flex justify-end">
+					<DrawerTrigger>
+						<Button
+							variant="ghost"
+							className="cursor-pointer border shadow-sm"
+							onClick={() => fetchCourseDetails(course.link)}
+						>
+							View
+						</Button>
+					</DrawerTrigger>
+				</CardContent>
+			</Card>
+		));
+	}, [paginatedCourseList, fetchCourseDetails]);
+
+	const totalPages = useMemo(() => {
+		return courseList ? Math.ceil(courseList.length / itemsPerPage) : 1;
+	}, [courseList, itemsPerPage]);
+
+	const handlePageChange = (newPage: number) => {
+		setCurrentPage(newPage);
+	};
+
+	return (
+		<div className="h-[100vh] px-2.5 md:px-20 mx-auto py-10">
+			<h1 className="text-3xl font-bold my-4 ms-5">
+				Results for &quot;{courseCode}&quot;
+			</h1>
+			<Drawer>
+				{loadingCourseList ? (
 					<div className="flex justify-center items-center pt-52">
 						<LoaderIcon className="animate-spin h-20 w-20" />
 					</div>
-				) : courseList.length > 0 ? (
-					<ScrollArea className="h-[70vh] p-4">
-						<div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-							{courseList.map((course, index) => (
-								<Card
-									key={index}
-									className="dark:hover:bg-neutral-800 hover:bg-neutral-200"
-								>
-									<CardHeader>
-										<CardTitle className="text-lg">{course.title}</CardTitle>
-										<CardDescription className="shadow-none">
-											{course.author}
-										</CardDescription>
-									</CardHeader>
-									<CardContent className="py-4 rounded-md shadow-md flex justify-end">
-										<DrawerTrigger>
-											<Button
-												variant="ghost"
-												className="cursor-pointer border shadow-sm"
-												onClick={() => fetchCourseDetails(course.link)}
-											>
-												View
-											</Button>
-										</DrawerTrigger>
-									</CardContent>
-								</Card>
-							))}
+				) : courseList?.length > 0 ? (
+					<>
+						<Pagination>
+							<PaginationContent className="mb-5">
+								<PaginationItem>
+									<PaginationPrevious
+										onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+									/>
+								</PaginationItem>
+								<PaginationItem>
+									<PaginationLink href="#">{currentPage}</PaginationLink>
+								</PaginationItem>
+								{currentPage < totalPages && (
+									<>
+										<PaginationItem>
+											<PaginationEllipsis />
+										</PaginationItem>
+										<PaginationItem>
+											<PaginationNext
+												onClick={() =>
+													handlePageChange(Math.min(currentPage + 1, totalPages))
+												}
+											/>
+										</PaginationItem>
+									</>
+								)}
+							</PaginationContent>
+						</Pagination>
+						<div className="h-fit p-4 overflow-y-auto">
+							<div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+								{courseListCards}
+							</div>
 						</div>
-					</ScrollArea>
+					</>
 				) : (
 					<div className="flex justify-center items-center pt-20 px-4">
 						<div className="text-center">
@@ -135,73 +194,62 @@ export default function CoursePage({
 						</div>
 					</div>
 				)}
-				<DrawerContent className="md:max-w-3xl mx-2 md:mx-auto">
-					<DrawerHeader>
-						<DrawerTitle className="text-3xl mb-10">
-							{typeof courseData?.details["Title"] === "string"
-								? courseData?.details["Title"]
-								: "-"}
-						</DrawerTitle>
-						<DrawerDescription>
-							<div className="flow-root">
-								<dl className="-my-3 text-left divide-y divide-gray-100 text-lg text-black dark:text-white">
-									<div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
-										<dt className="font-medium">Issue Date:</dt>
-										<dd className="sm:col-span-2">
-											{typeof courseData?.details["Issue Date"] === "string"
-												? courseData?.details["Issue Date"]
-												: "-"}
-										</dd>
-									</div>
+				{courseData && (
+					<DrawerContent className="md:max-w-3xl mx-2 md:mx-auto">
+						<DrawerHeader>
+							<DrawerTitle className="text-3xl mb-10">
+								{typeof courseData?.details["Title"] === "string"
+									? courseData?.details["Title"]
+									: "-"}
+							</DrawerTitle>
+							<DrawerDescription>
+								<div className="flow-root">
+									<dl className="-my-3 text-left divide-y divide-gray-100 text-lg text-black dark:text-white">
+										{Object.keys(courseData.details).map((key) => {
+											const detail = courseData.details[key];
+											if (key === "" && detail === "") return null;
+											return (
+												<div
+													key={key}
+													className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4"
+												>
+													<dt className="font-medium">{key}:</dt>
+													<dd className="sm:col-span-2">
+														{typeof detail === "string" ? (
+															detail
+														) : detail?.data &&
+														  (key === "Authors" ||
+																key === "Appears in Collections" ||
+																key === "URI") ? (
+															<span>{detail.data}</span>
+														) : (
+															"-"
+														)}
+													</dd>
+												</div>
+											);
+										})}
+									</dl>
+								</div>
+							</DrawerDescription>
+						</DrawerHeader>
+						<DrawerFooter className="grid grid-cols-2 gap-4">
+							{courseData?.downloadLinks.map((link, index) => (
+								<a key={index} href={link.fileUrl} download className="block w-full">
+									<Button variant="default" className="w-full">
+										<Download className="ml-2" />
+									</Button>
+								</a>
+							))}
 
-									<div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
-										<dt className="font-medium">Description:</dt>
-										<dd className="sm:col-span-2">
-											{typeof courseData?.details["Description"] === "string"
-												? courseData?.details["Description"]
-												: "-"}
-										</dd>
-									</div>
-
-									<div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
-										<dt className="font-medium">Author:</dt>
-										<dd className="sm:col-span-2">
-											{courseData?.details["Authors"] &&
-											typeof courseData.details["Authors"] !== "string"
-												? courseData.details["Authors"].data
-												: "-"}
-										</dd>
-									</div>
-
-									<div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
-										<dt className="font-medium">Collection:</dt>
-										<dd className="sm:col-span-2">
-											{courseData?.details["Appears in Collections"] &&
-											typeof courseData.details["Appears in Collections"] !== "string"
-												? courseData.details["Appears in Collections"].data
-												: "-"}
-										</dd>
-									</div>
-								</dl>
-							</div>
-						</DrawerDescription>
-					</DrawerHeader>
-					<DrawerFooter className="grid grid-cols-2 gap-4">
-						{courseData?.downloadLinks.map((link, index) => (
-							<a key={index} href={link.fileUrl} download className="block w-full">
-								<Button variant="default" className="w-full">
-									<Download className="ml-2" />
+							<DrawerClose asChild>
+								<Button variant="destructive" className="w-full">
+									Close
 								</Button>
-							</a>
-						))}
-
-						<DrawerClose asChild>
-							<Button variant="destructive" className="w-full">
-								Close
-							</Button>
-						</DrawerClose>
-					</DrawerFooter>
-				</DrawerContent>
+							</DrawerClose>
+						</DrawerFooter>
+					</DrawerContent>
+				)}
 			</Drawer>
 		</div>
 	);

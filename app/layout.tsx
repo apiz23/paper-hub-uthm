@@ -6,13 +6,18 @@ import Navbar from "@/components/navbar";
 import DotPattern from "@/components/magicui/dot-pattern";
 import { cn } from "@/lib/utils";
 import Footer from "@/components/footer";
-import { toast, Toaster } from "sonner";
+import { Toaster } from "sonner";
+import ReactQueryProvider from "@/lib/react-query-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
 	title: "UTHM Paper Hub",
 	description: "UTHM Exam Paper Finder",
+	icons: {
+		icon: "",
+		href: "",
+	},
 };
 
 export default function RootLayout({
@@ -42,7 +47,9 @@ export default function RootLayout({
 								"absolute inset-0 z-0 [mask-image:radial-gradient(200px_circle_at_center,white,transparent)] md:[mask-image:radial-gradient(400px_circle_at_center,white,transparent)]"
 							)}
 						/>
-						<div className="relative z-10">{children}</div>
+						<div className="relative z-10">
+							<ReactQueryProvider>{children}</ReactQueryProvider>
+						</div>
 					</div>
 					<Footer />
 				</ThemeProvider>

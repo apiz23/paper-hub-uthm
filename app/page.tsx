@@ -7,7 +7,6 @@ import TypingAnimation from "@/components/magicui/typing-animation";
 import { PlaceholdersAndVanishInput } from "@/components/placeholder-vanish";
 import { toast } from "sonner";
 import { X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 export default function Home() {
 	const router = useRouter();

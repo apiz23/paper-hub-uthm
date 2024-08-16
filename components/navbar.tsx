@@ -21,21 +21,21 @@ export default function Navbar() {
 					alt="logo"
 					width={300}
 					height={300}
-					className="w-6 h-6"
+					className="w-5 h-5"
 				/>
 			),
 			label: "Library UTHM",
 			href: "https://library.uthm.edu.my/",
 		},
 		{
-			icon: <Github className="h-6 w-6" />,
+			icon: <Github className="w-5 h-5" />,
 			label: "GitHub Apiz23",
 			href: "https://github.com/apiz23",
 		},
 		{
-			icon: <Linkedin className="h-6 w-6" />,
+			icon: <Linkedin className="w-5 h-5" />,
 			label: "LinkedIn Me",
-			href: "https://linkedin.com",
+			href: "https://www.linkedin.com/in/muh-hafizuddin/",
 		},
 	];
 
@@ -49,7 +49,7 @@ export default function Navbar() {
 								<Tooltip>
 									<TooltipTrigger asChild>
 										<Link href="/">
-											<Home />
+											<Home className="w-5 h-5" />
 										</Link>
 									</TooltipTrigger>
 									<TooltipContent>
