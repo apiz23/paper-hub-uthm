@@ -21,4 +21,5 @@ export interface CourseCodeList {
 	link: string;
 	title: string;
 	author: string;
+	date: string;
 }

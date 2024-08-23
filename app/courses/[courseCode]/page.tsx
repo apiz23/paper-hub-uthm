@@ -16,7 +16,6 @@ import {
 	DrawerFooter,
 	DrawerHeader,
 	DrawerTitle,
-	DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +23,6 @@ import {
 	PaginationContent,
 	PaginationItem,
 	PaginationLink,
-	PaginationEllipsis,
 	PaginationPrevious,
 	PaginationNext,
 } from "@/components/ui/pagination";
@@ -43,7 +41,7 @@ export default function CoursePage({
 	const { courseCode } = params;
 	const [courseData, setCourseData] = useState<CourseData | null>(null);
 	const [currentPage, setCurrentPage] = useState(1);
-	const itemsPerPage = 30;
+	const itemsPerPage = 15;
 	const [drawerOpen, setDrawerOpen] = useState(false);
 
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -101,7 +99,10 @@ export default function CoursePage({
 			>
 				<CardHeader>
 					<CardTitle className="text-lg">{course.title}</CardTitle>
-					<CardDescription className="shadow-none">{course.author}</CardDescription>
+					<CardDescription className="shadow-none">
+						{course.author} -{" "}
+						{course.date && course.date !== "-" ? course.date : "Null"}
+					</CardDescription>
 				</CardHeader>
 				<CardContent className="flex justify-end">
 					<Button
@@ -124,6 +125,8 @@ export default function CoursePage({
 		setCurrentPage(newPage);
 	};
 
+	console.log(courseList);
+
 	return (
 		<div className="h-[100vh] px-2.5 md:px-20 mx-auto pb-10 pt-5">
 			<h1 className="text-3xl font-bold my-4 ms-5">
@@ -143,13 +146,12 @@ export default function CoursePage({
 								/>
 							</PaginationItem>
 							<PaginationItem>
-								<PaginationLink href="#">{currentPage}</PaginationLink>
+								<PaginationLink className="bg-black text-white dark:bg-white dark:text-black">
+									{currentPage}
+								</PaginationLink>
 							</PaginationItem>
 							{currentPage < totalPages && (
 								<>
-									<PaginationItem>
-										<PaginationEllipsis />
-									</PaginationItem>
 									<PaginationItem>
 										<PaginationNext
 											onClick={() =>
@@ -199,7 +201,7 @@ export default function CoursePage({
 							</DrawerTitle>
 							<DrawerDescription>
 								<div className="flow-root">
-									<dl className="-my-3 text-left divide-y divide-gray-100 text-lg text-black dark:text-white">
+									<dl className="-my-3 text-left divide-y divide-gray-100 text-base text-black dark:text-white">
 										{Object.keys(courseData.details).map((key) => {
 											const detail = courseData.details[key];
 											if (key === "" && detail === "") return null;
@@ -236,7 +238,6 @@ export default function CoursePage({
 									</Button>
 								</a>
 							))}
-
 							<DrawerClose asChild>
 								<Button variant="destructive" className="w-full">
 									Close
