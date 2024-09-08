@@ -29,9 +29,9 @@ import {
 import { Download, LoaderIcon } from "lucide-react";
 import { CourseCodeList, CourseData } from "@/lib/interface/interface";
 import Link from "next/link";
-import { toast } from "sonner";
 import { useQuery } from "react-query";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { fetchCourseList, fetchCourseDetails } from "@/lib/api/courseApi";
 
 export default function CoursePage({
 	params,
@@ -48,38 +48,28 @@ export default function CoursePage({
 
 	const { data: courseList, isLoading: loadingCourseList } = useQuery(
 		["courseList", courseCode],
-		async () => {
-			const response = await fetch(
-				`${apiUrl}uthm-lib/list-courses-paper?query=${courseCode}`
-			);
-			if (!response.ok) {
-				throw new Error("Network response was not ok");
-			}
-			return response.json();
-		},
+		() => fetchCourseList(apiUrl!, courseCode),
 		{
 			enabled: !!courseCode,
-			onError: (error: any) => {
-				toast.error("Failed to fetch course list:", error);
-			},
 			staleTime: 300000,
+			onSuccess: (data) => {
+				data.sort((a: CourseCodeList, b: CourseCodeList) => {
+					const dateA = new Date(a.date);
+					const dateB = new Date(b.date);
+					return dateB.getTime() - dateA.getTime();
+				});
+			},
 		}
 	);
 
-	const fetchCourseDetails = useCallback(
+	const handleFetchCourseDetails = useCallback(
 		async (link: string) => {
 			try {
-				const response = await fetch(
-					`${apiUrl}uthm-lib/course-link-details?url=${link}`
-				);
-				if (!response.ok) {
-					toast.error("Network response was not ok");
-				}
-				const data = await response.json();
+				const data = await fetchCourseDetails(apiUrl!, link);
 				setCourseData(data);
 				setDrawerOpen(true);
 			} catch (error: any) {
-				toast.error("Failed to fetch course details:", error);
+				console.error(error);
 			}
 		},
 		[apiUrl]
@@ -108,14 +98,14 @@ export default function CoursePage({
 					<Button
 						variant="ghost"
 						className="cursor-pointer border shadow-sm"
-						onClick={() => fetchCourseDetails(course.link)}
+						onClick={() => handleFetchCourseDetails(course.link)}
 					>
 						View
 					</Button>
 				</CardContent>
 			</Card>
 		));
-	}, [paginatedCourseList, fetchCourseDetails]);
+	}, [paginatedCourseList, handleFetchCourseDetails]);
 
 	const totalPages = useMemo(() => {
 		return courseList ? Math.ceil(courseList.length / itemsPerPage) : 1;
@@ -124,8 +114,6 @@ export default function CoursePage({
 	const handlePageChange = (newPage: number) => {
 		setCurrentPage(newPage);
 	};
-
-	console.log(courseList);
 
 	return (
 		<div className="h-[100vh] px-2.5 md:px-20 mx-auto pb-10 pt-5">
@@ -181,11 +169,8 @@ export default function CoursePage({
 						</p>
 						<p className="mt-4 text-gray-500">We can&apos;t find that course code</p>
 
-						<Link
-							href="/"
-							className="mt-6 inline-block rounded bg-red-500 px-5 py-3 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring"
-						>
-							Go Back Home
+						<Link href="/" className="mt-10 rounded px-5 py-3 text-sm font-medium">
+							<Button variant="destructive">Go Back Home</Button>
 						</Link>
 					</div>
 				</div>
@@ -234,12 +219,12 @@ export default function CoursePage({
 							{courseData?.downloadLinks.map((link, index) => (
 								<a key={index} href={link.fileUrl} download className="block w-full">
 									<Button variant="default" className="w-full">
-										<Download className="ml-2" />
+										<Download className="mr-2 h-4 w-4" /> Download
 									</Button>
 								</a>
 							))}
 							<DrawerClose asChild>
-								<Button variant="destructive" className="w-full">
+								<Button variant="default" className="w-full">
 									Close
 								</Button>
 							</DrawerClose>
