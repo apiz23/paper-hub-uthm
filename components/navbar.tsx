@@ -3,7 +3,7 @@ import Image from "next/image";
 import { ModeToggle } from "./theme-btn";
 import Link from "next/link";
 import { Dock, DockIcon } from "./magicui/dock";
-import { Github, Home, Linkedin } from "lucide-react";
+import { Github, Home, Info, Linkedin } from "lucide-react";
 import {
 	Tooltip,
 	TooltipContent,
@@ -13,6 +13,19 @@ import {
 import { Separator } from "./ui/separator";
 
 export default function Navbar() {
+	const primaryLinks = [
+		{
+			icon: <Home className="w-5 h-5" />,
+			label: "Home",
+			href: "/",
+		},
+		{
+			icon: <Info className="w-5 h-5" />,
+			label: "About Us",
+			href: "/about",
+		},
+	];
+
 	const icons = [
 		{
 			icon: (
@@ -45,18 +58,18 @@ export default function Navbar() {
 				<div className="relative flex justify-center">
 					<TooltipProvider>
 						<Dock direction="middle">
-							<DockIcon>
-								<Tooltip>
-									<TooltipTrigger asChild>
-										<Link href="/">
-											<Home className="w-5 h-5" />
-										</Link>
-									</TooltipTrigger>
-									<TooltipContent>
-										<p>Home</p>
-									</TooltipContent>
-								</Tooltip>
-							</DockIcon>
+							{primaryLinks.map((item, index) => (
+								<DockIcon key={index}>
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<Link href={item.href}>{item.icon}</Link>
+										</TooltipTrigger>
+										<TooltipContent>
+											<p>{item.label}</p>
+										</TooltipContent>
+									</Tooltip>
+								</DockIcon>
+							))}
 							<Separator orientation="vertical" />
 							{icons.map((item, index) => (
 								<DockIcon key={index}>
