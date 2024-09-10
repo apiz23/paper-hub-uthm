@@ -126,8 +126,8 @@ export default function About() {
 	return (
 		<>
 			<section className="min-h-screen p-4">
-				<ScrollArea className="rounded-lg h-[90vh] w-full md:pb-20">
-					<div className="max-w-4xl mx-auto pt-28 md:px-0 px-10 mb-20">
+				<ScrollArea className="rounded-lg h-[90vh] w-full pb-20">
+					<div className="max-w-xl md:max-w-4xl mx-auto pt-12 md:pt-28 px-2 md:mb-20">
 						<HyperText
 							className="text-3xl md:text-7xl font-bold text-black dark:text-white"
 							text="The Architecture"
@@ -166,7 +166,7 @@ export default function About() {
 							</div>
 						</div>
 					</div>
-					<div className="max-w-4xl mx-auto mt-20">
+					<div className="max-w-xl md:max-w-4xl mx-auto md:mt-10">
 						<div
 							className="relative mx-auto max-w-2xl flex items-center justify-center md:p-0 p-10 md:shadow-xl"
 							ref={containerRef}
