@@ -1,3 +1,5 @@
+"use client";
+
 import CodeBlock from "@/components/codeBlock";
 import BlurIn from "@/components/magicui/blur-in";
 import HyperText from "@/components/magicui/hyper-text";
@@ -5,8 +7,34 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RiNextjsFill } from "react-icons/ri";
 import { SiNestjs, SiTypescript } from "react-icons/si";
+import React, { forwardRef, useRef } from "react";
+import { cn } from "@/lib/utils";
+import { AnimatedBeam } from "@/components/magicui/animated-beam";
+import { Library, ServerIcon, User } from "lucide-react";
+
+const Circle = forwardRef<
+	HTMLDivElement,
+	{ className?: string; children?: React.ReactNode }
+>(({ className, children }, ref) => {
+	return (
+		<div
+			ref={ref}
+			className={cn(
+				"z-10 flex h-12 md:h-20 w-12 md:w-20 items-center justify-center rounded-full border-2 bg-white p-3 shadow-[0_0_20px_-12px_rgba(0,0,0,0.8)]",
+				className
+			)}
+		>
+			{children}
+		</div>
+	);
+});
 
 export default function About() {
+	const containerRef = useRef<HTMLDivElement>(null);
+	const div1Ref = useRef<HTMLDivElement>(null);
+	const div2Ref = useRef<HTMLDivElement>(null);
+	const div3Ref = useRef<HTMLDivElement>(null);
+
 	const fetchListCode = `
 		async listCoursesPaper(query: string): Promise<any[]> {
 			const url = 'http://digitalcollection.uthm.edu.my/simple-search';
@@ -61,13 +89,13 @@ export default function About() {
 			$('a[href]').each((_, element) => {
 				const link = $(element).attr('href');
 				if (link && link.includes('bitstream')) {
-				const fileName = $(element).text().trim();
-				const fileUrl = \`\${baseUrl}\${link}\`;
+					const fileName = $(element).text().trim();
+					const fileUrl = \`\${baseUrl}\${link}\`;
 
-				if (!seenUrls.has(fileUrl)) {
-					seenUrls.add(fileUrl);
-					downloadLinks.push({ fileName, fileUrl });
-				}
+					if (!seenUrls.has(fileUrl)) {
+						seenUrls.add(fileUrl);
+						downloadLinks.push({ fileName, fileUrl });
+					}
 				}
 			});
 
@@ -114,9 +142,9 @@ export default function About() {
 	`;
 	return (
 		<>
-			<section className="min-h-screen p-4 md:mb-20">
-				<ScrollArea className="rounded-lg h-[90vh] w-full">
-					<div className="max-w-4xl mx-auto pt-28 md:px-0 px-10 mb-10">
+			<section className="min-h-screen p-4">
+				<ScrollArea className="rounded-lg h-[90vh] w-full md:pb-20">
+					<div className="max-w-4xl mx-auto pt-28 md:px-0 px-10 mb-20">
 						<HyperText
 							className="text-3xl md:text-7xl font-bold text-black dark:text-white"
 							text="The Architecture"
@@ -155,11 +183,76 @@ export default function About() {
 							</div>
 						</div>
 					</div>
+					<div className="max-w-4xl mx-auto mt-20">
+						<div
+							className="relative mx-auto max-w-2xl flex items-center justify-center md:p-0 p-10 md:shadow-xl"
+							ref={containerRef}
+						>
+							<div className="flex h-full w-full flex-col items-stretch justify-between gap-10">
+								<div className="flex flex-row justify-between">
+									<Circle ref={div1Ref}>
+										<User className="text-black size-7" />
+									</Circle>
+									<Circle ref={div2Ref}>
+										<ServerIcon className="text-black size-7" />
+									</Circle>
+									<Circle ref={div3Ref}>
+										<Library className="text-black size-7" />
+									</Circle>
+								</div>
+							</div>
+
+							<AnimatedBeam
+								containerRef={containerRef}
+								fromRef={div1Ref}
+								toRef={div2Ref}
+								startYOffset={10}
+								endYOffset={10}
+								curvature={-20}
+							/>
+
+							<AnimatedBeam
+								containerRef={containerRef}
+								fromRef={div2Ref}
+								toRef={div3Ref}
+								startYOffset={10}
+								endYOffset={10}
+								curvature={-20}
+							/>
+
+							<AnimatedBeam
+								containerRef={containerRef}
+								fromRef={div3Ref}
+								toRef={div2Ref}
+								startYOffset={-10}
+								endYOffset={-10}
+								curvature={20}
+								reverse
+							/>
+
+							<AnimatedBeam
+								containerRef={containerRef}
+								fromRef={div2Ref}
+								toRef={div1Ref}
+								startYOffset={-10}
+								endYOffset={-10}
+								curvature={20}
+								reverse
+							/>
+						</div>
+					</div>
+					<div className="max-w-4xl mx-auto md:p-10 px-10">
+						<div className="flex justify-between max-w-2xl mx-auto pb-20 px-5">
+							<p>User</p>
+							<p>Backend</p>
+							<p>Library</p>
+						</div>
+					</div>
 					<BlurIn
 						word="Nest.js code sample"
-						className="text-4xl md:text-5xl text-center mx-2 font-bold text-black dark:text-white"
+						className="text-3xl md:text-7xl capitalize text-center font-bold text-black dark:text-white"
 					/>
-					<div className="max-w-4xl mx-auto md:block hidden">
+					<div className="max-w-4xl mx-auto md:block hidden md:pb-20">
 						<div className="max-w-4xl p-4 mx-auto mt-10">
 							<h3 className="mb-4 scroll-m-20 text-2xl font-semibold tracking-tight">
 								How to Fetch the list of searched subject
@@ -177,7 +270,7 @@ export default function About() {
 							</ScrollArea>
 						</div>
 					</div>
-					<div className="lg:hidden flex justify-center">
+					<div className="lg:hidden flex justify-center md:pb-20">
 						<p className="mt-6 border-l-2 rounded-r-md pl-6 bg-neutral-800 bg-opacity-70 p-2">
 							Open in Desktop View
 						</p>
