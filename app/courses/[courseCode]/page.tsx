@@ -218,13 +218,13 @@ export default function CoursePage({
 						<DrawerFooter className="grid grid-cols-2 gap-4">
 							{courseData?.downloadLinks.map((link, index) => (
 								<a key={index} href={link.fileUrl} download className="block w-full">
-									<Button variant="default" className="w-full">
+									<Button className="w-full bg-blue-800 text-white">
 										<Download className="mr-2 h-4 w-4" /> Download
 									</Button>
 								</a>
 							))}
 							<DrawerClose asChild>
-								<Button variant="default" className="w-full">
+								<Button variant="destructive" className="w-full">
 									Close
 								</Button>
 							</DrawerClose>

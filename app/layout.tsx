@@ -9,7 +9,7 @@ import Footer from "@/components/footer";
 import { Toaster } from "sonner";
 import ReactQueryProvider from "@/lib/react-query-provider";
 
-const inter = Poppins({ subsets: ["latin"], weight: ["300"] });
+const inter = Inter({ subsets: ["latin"], weight: ["400"] });
 
 export const metadata: Metadata = {
 	title: "UTHM Paper Hub",

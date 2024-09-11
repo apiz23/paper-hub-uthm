@@ -11,6 +11,8 @@ import React, { useRef } from "react";
 import { AnimatedBeam } from "@/components/magicui/animated-beam";
 import { Library, ServerIcon, User } from "lucide-react";
 import Circle from "@/components/circleComp";
+import Safari from "@/components/magicui/safari";
+import Iphone15Pro from "@/components/magicui/iphone-15-pro";
 
 export default function About() {
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -224,11 +226,29 @@ export default function About() {
 							/>
 						</div>
 					</div>
-					<div className="max-w-4xl mx-auto md:p-10 px-10">
+					<div className="md:p-10 px-10">
 						<div className="flex justify-between max-w-2xl mx-auto pb-20 px-5">
 							<p>User</p>
 							<p>Backend</p>
 							<p>Library</p>
+						</div>
+					</div>
+					<div className="p-4 max-w-4xl mx-auto relative space-y-10 mb-20 md:mb-32">
+						<BlurIn
+							className="text-3xl md:text-7xl font-bold text-black dark:text-white mb-10 capitalize"
+							word="responsive design"
+						/>
+						<div className="px-2">
+							<Safari
+								url="https://paper-hub-uthm.vercel.app/"
+								className="size-full"
+								src="/UI1.png"
+							/>
+							<p className="text-center w-full text-2xl font-semibold my-5">Laptop</p>
+						</div>
+						<div className="px-2">
+							<Iphone15Pro className="size-1/2 md:size-1/3 mx-auto" src="/UI2.png" />
+							<p className="text-center w-full text-2xl font-semibold my-5">Mobile</p>
 						</div>
 					</div>
 					<BlurIn
