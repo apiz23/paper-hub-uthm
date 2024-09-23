@@ -32,6 +32,7 @@ import Link from "next/link";
 import { useQuery } from "react-query";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { fetchCourseList, fetchCourseDetails } from "@/lib/api/courseApi";
+import confetti from "canvas-confetti";
 
 export default function CoursePage({
 	params,
@@ -121,7 +122,7 @@ export default function CoursePage({
 				Results for &quot;{courseCode}&quot;
 			</h1>
 			{loadingCourseList ? (
-				<div className="flex justify-center items-center pt-52">
+				<div className="h-[70vh] flex justify-center items-center">
 					<LoaderIcon className="animate-spin h-20 w-20" />
 				</div>
 			) : courseList?.length > 0 ? (
@@ -218,7 +219,11 @@ export default function CoursePage({
 						<DrawerFooter className="grid grid-cols-2 gap-4">
 							{courseData?.downloadLinks.map((link, index) => (
 								<a key={index} href={link.fileUrl} download className="block w-full">
-									<Button className="w-full bg-blue-800 text-white">
+									<Button
+										key={index}
+										className="w-full bg-blue-800 text-white hover:bg-blue-900"
+										onClick={triggerConfetti}
+									>
 										<Download className="mr-2 h-4 w-4" /> Download
 									</Button>
 								</a>
@@ -234,4 +239,33 @@ export default function CoursePage({
 			)}
 		</div>
 	);
+}
+
+export function triggerConfetti() {
+	const end = Date.now() + 3 * 1000;
+	const colors = ["#FF204E", "#836FFF", "#15F5BA", "#F0F3FF"];
+	const frame = () => {
+		if (Date.now() > end) return;
+
+		confetti({
+			particleCount: 2,
+			angle: 60,
+			spread: 55,
+			startVelocity: 60,
+			origin: { x: 0, y: 0.5 },
+			colors: colors,
+		});
+		confetti({
+			particleCount: 2,
+			angle: 120,
+			spread: 55,
+			startVelocity: 60,
+			origin: { x: 1, y: 0.5 },
+			colors: colors,
+		});
+
+		requestAnimationFrame(frame);
+	};
+
+	frame();
 }

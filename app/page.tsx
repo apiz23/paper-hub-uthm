@@ -17,34 +17,33 @@ export default function Home() {
 		"Fluid Mechanics I",
 		"BIT10403",
 		"BIC10103",
-		"Object-Oriented Programming",
+		"Object-Oriented Programming",   
 	];
 	const toastShownRef = useRef(false);
-	const handleSearch = (e: any) => {
+
+	const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (courseCode.trim()) {
-			router.push(`/courses/${courseCode}`);
+			router.push(`/courses/${encodeURIComponent(courseCode.trim())}`);
 		}
 	};
 
 	useEffect(() => {
-		if (!sessionStorage.getItem("toastShown")) {
-			setTimeout(() => {
-				if (!toastShownRef.current) {
-					const toastId = toast.info("Acknowledgement", {
-						description: "Library Tunku Tun Aminah UTHM",
-						duration: Infinity,
-						action: {
-							label: <X />,
-							onClick: () => {
-								toast.dismiss(toastId);
-							},
-						},
-					});
-					toastShownRef.current = true;
-					sessionStorage.setItem("toastShown", "true");
-				}
+		if (!sessionStorage.getItem("toastShown") && !toastShownRef.current) {
+			const timer = setTimeout(() => {
+				const toastId = toast.info("Acknowledgement", {
+					description: "Library Tunku Tun Aminah UTHM",
+					duration: Infinity,
+					action: {
+						label: <X />,
+						onClick: () => toast.dismiss(toastId),
+					},
+				});
+				toastShownRef.current = true;
+				sessionStorage.setItem("toastShown", "true");
 			}, 1000);
+
+			return () => clearTimeout(timer);
 		}
 	}, []);
 
@@ -68,7 +67,7 @@ export default function Home() {
 				<div className="max-w-xl mx-auto flex w-4/5 md:w-full items-center md:px-0 px-2">
 					<PlaceholdersAndVanishInput
 						placeholders={placeholders}
-						onChange={(e) => setCourseCode(e.target.value)}
+						onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCourseCode(e.target.value)}
 						onSubmit={handleSearch}
 					/>
 				</div>
