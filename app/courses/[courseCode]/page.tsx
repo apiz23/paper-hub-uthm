@@ -108,6 +108,35 @@ export default function CoursePage({
 		));
 	}, [paginatedCourseList, handleFetchCourseDetails]);
 
+	const triggerConfetti = () => {
+		const end = Date.now() + 3 * 1000;
+		const colors = ["#FF204E", "#836FFF", "#15F5BA", "#F0F3FF"];
+		const frame = () => {
+			if (Date.now() > end) return;
+
+			confetti({
+				particleCount: 2,
+				angle: 60,
+				spread: 55,
+				startVelocity: 60,
+				origin: { x: 0, y: 0.5 },
+				colors: colors,
+			});
+			confetti({
+				particleCount: 2,
+				angle: 120,
+				spread: 55,
+				startVelocity: 60,
+				origin: { x: 1, y: 0.5 },
+				colors: colors,
+			});
+
+			requestAnimationFrame(frame);
+		};
+
+		frame();
+	};
+
 	const totalPages = useMemo(() => {
 		return courseList ? Math.ceil(courseList.length / itemsPerPage) : 1;
 	}, [courseList, itemsPerPage]);
@@ -222,7 +251,9 @@ export default function CoursePage({
 									<Button
 										key={index}
 										className="w-full bg-blue-800 text-white hover:bg-blue-900"
-										onClick={triggerConfetti}
+										onClick={() => {
+											triggerConfetti();
+										}}
 									>
 										<Download className="mr-2 h-4 w-4" /> Download
 									</Button>
@@ -239,33 +270,4 @@ export default function CoursePage({
 			)}
 		</div>
 	);
-}
-
-export function triggerConfetti() {
-	const end = Date.now() + 3 * 1000;
-	const colors = ["#FF204E", "#836FFF", "#15F5BA", "#F0F3FF"];
-	const frame = () => {
-		if (Date.now() > end) return;
-
-		confetti({
-			particleCount: 2,
-			angle: 60,
-			spread: 55,
-			startVelocity: 60,
-			origin: { x: 0, y: 0.5 },
-			colors: colors,
-		});
-		confetti({
-			particleCount: 2,
-			angle: 120,
-			spread: 55,
-			startVelocity: 60,
-			origin: { x: 1, y: 0.5 },
-			colors: colors,
-		});
-
-		requestAnimationFrame(frame);
-	};
-
-	frame();
 }
