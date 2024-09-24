@@ -86,7 +86,7 @@ export default function CoursePage({
 		return paginatedCourseList?.map((course: CourseCodeList, index: number) => (
 			<Card
 				key={index}
-				className="dark:hover:bg-neutral-800 hover:bg-neutral-200 min-h-[15vh]"
+				className="dark:hover:bg-neutral-800 hover:bg-neutral-200 min-h-[18vh] flex flex-col justify-between"
 			>
 				<CardHeader>
 					<CardTitle className="text-lg">{course.title}</CardTitle>
@@ -95,6 +95,7 @@ export default function CoursePage({
 						{course.date && course.date !== "-" ? course.date : "Null"}
 					</CardDescription>
 				</CardHeader>
+				<div className="flex-grow"></div>
 				<CardContent className="flex justify-end">
 					<Button
 						variant="ghost"
