@@ -57,7 +57,7 @@ export default function Navbar() {
 			<div className="fixed bottom-20 md:bottom-14 left-0 right-0 z-50">
 				<div className="relative flex justify-center">
 					<TooltipProvider>
-						<Dock direction="middle">
+						<Dock direction="middle" className="bg-neutral-300/50 dark:bg-neutral-900">
 							{primaryLinks.map((item, index) => (
 								<DockIcon key={index}>
 									<Tooltip>

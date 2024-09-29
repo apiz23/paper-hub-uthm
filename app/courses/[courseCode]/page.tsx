@@ -86,12 +86,12 @@ export default function CoursePage({
 		return paginatedCourseList?.map((course: CourseCodeList, index: number) => (
 			<Card
 				key={index}
-				className="dark:hover:bg-neutral-800 hover:bg-neutral-200 min-h-[18vh] flex flex-col justify-between"
+				className="dark:bg-black bg-slate-200/70 dark:hover:bg-neutral-800 hover:bg-neutral-100 min-h-[18vh] flex flex-col justify-between"
 			>
 				<CardHeader>
 					<CardTitle className="text-lg">{course.title}</CardTitle>
 					<CardDescription className="shadow-none">
-						{course.author} -{" "}
+						{course.author} - {" "}
 						{course.date && course.date !== "-" ? course.date : "Null"}
 					</CardDescription>
 				</CardHeader>
@@ -99,7 +99,7 @@ export default function CoursePage({
 				<CardContent className="flex justify-end">
 					<Button
 						variant="ghost"
-						className="cursor-pointer border shadow-sm"
+						className="cursor-pointer border shadow-sm bg-white dark:bg-neutral-800 dark:hover:bg-neutral-600"
 						onClick={() => handleFetchCourseDetails(course.link)}
 					>
 						View
@@ -148,9 +148,14 @@ export default function CoursePage({
 
 	return (
 		<div className="h-[100vh] px-2.5 md:px-20 mx-auto pb-10 pt-5">
-			<h1 className="text-3xl font-bold my-4 ms-5">
-				Results for &quot;{courseCode}&quot;
+			<h1 className="text-3xl font-thin my-4 ms-5">
+				Results for &quot;
+				<strong className="font-extrabold underline underline-offset-8">
+					{decodeURIComponent(courseCode)}
+				</strong>
+				&quot;
 			</h1>
+
 			{loadingCourseList ? (
 				<div className="h-[70vh] flex justify-center items-center">
 					<LoaderIcon className="animate-spin h-20 w-20" />
@@ -182,28 +187,26 @@ export default function CoursePage({
 							)}
 						</PaginationContent>
 					</Pagination>
-					<ScrollArea className="h-[65vh] p-4">
+					<ScrollArea className="h-[54vh] md:h-[70vh] p-4">
 						<div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-3">
 							{courseListCards}
 						</div>
 					</ScrollArea>
 				</>
 			) : (
-				<div className="flex justify-center items-center pt-20 px-4">
-					<div className="text-center">
-						<h1 className="text-9xl font-black text-gray-700 dark:text-gray-200">
-							404
-						</h1>
+				<div className="px-4 pt-20 md:pt-40 text-center gap-4">
+					<h1 className="text-9xl font-black text-gray-700 dark:text-gray-200">
+						404
+					</h1>
 
-						<p className="text-2xl font-bold tracking-tight dark:text-white text-gray-900 sm:text-4xl">
-							Uh-oh!
-						</p>
-						<p className="mt-4 text-gray-500">We can&apos;t find that course code</p>
+					<p className="text-2xl font-bold tracking-tight dark:text-white text-gray-900 sm:text-4xl">
+						Uh-oh!
+					</p>
+					<p className="my-4 text-gray-300">We can&apos;t find that course code</p>
 
-						<Link href="/" className="mt-10 rounded px-5 py-3 text-sm font-medium">
-							<Button variant="destructive">Go Back Home</Button>
-						</Link>
-					</div>
+					<Link href="/" className="rounded px-5 py-3 text-sm font-medium">
+						<Button variant="destructive">Go Back Home</Button>
+					</Link>
 				</div>
 			)}
 			{courseData && (

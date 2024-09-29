@@ -34,24 +34,26 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-					<Toaster richColors position="top-right" />
-					<Navbar />
-					<div className="relative">
-						<DotPattern
-							width={15}
-							height={15}
-							cx={1}
-							cy={1}
-							cr={1}
-							className={cn(
-								"absolute inset-0 z-0 [mask-image:radial-gradient(200px_circle_at_center,white,transparent)] md:[mask-image:radial-gradient(400px_circle_at_center,white,transparent)]"
-							)}
-						/>
-						<div className="relative z-10">
-							<ReactQueryProvider>{children}</ReactQueryProvider>
+					<div className="bg-neutral-200 dark:bg-black">
+						<Toaster richColors position="top-right" />
+						<Navbar />
+						<div className="relative">
+							<DotPattern
+								width={15}
+								height={15}
+								cx={1}
+								cy={1}
+								cr={1}
+								className={cn(
+									"absolute inset-0 z-0 [mask-image:radial-gradient(200px_circle_at_center,white,transparent)] md:[mask-image:radial-gradient(400px_circle_at_center,white,transparent)]"
+								)}
+							/>
+							<div className="relative z-10">
+								<ReactQueryProvider>{children}</ReactQueryProvider>
+							</div>
 						</div>
+						<Footer />
 					</div>
-					<Footer />
 				</ThemeProvider>
 			</body>
 		</html>
