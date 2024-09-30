@@ -1,8 +1,6 @@
 {
 	"name": "UTHM Paper Hub",
 	"short_name": "UTHM PH",
-	"theme_color": "#FFFFFF",
-	"background_color": "#FFFFFF",
 	"start_url": "/",
 	"display": "standalone",
 	"orientation": "portrait",
