@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 export function PlaceholdersAndVanishInput({
 	placeholders,
@@ -273,5 +274,34 @@ export function PlaceholdersAndVanishInput({
 				</AnimatePresence>
 			</div>
 		</form>
+	);
+}
+
+export function SearchBar() {
+	const router = useRouter();
+	const [courseCode, setCourseCode] = useState("");
+	const placeholders = [
+		"Computer Architecture",
+		"BIC10303",
+		"Fluid Mechanics I",
+		"BIT10403",
+		"BIC10103",
+		"Object-Oriented Programming",
+	];
+	const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		if (courseCode.trim()) {
+			router.push(`/courses/${encodeURIComponent(courseCode.trim())}`);
+		}
+	};
+
+	return (
+		<PlaceholdersAndVanishInput
+			placeholders={placeholders}
+			onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+				setCourseCode(e.target.value)
+			}
+			onSubmit={handleSearch}
+		/>
 	);
 }

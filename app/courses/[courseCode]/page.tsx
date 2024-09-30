@@ -33,6 +33,10 @@ import { useQuery } from "react-query";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { fetchCourseList, fetchCourseDetails } from "@/lib/api/courseApi";
 import confetti from "canvas-confetti";
+import {
+	PlaceholdersAndVanishInput,
+	SearchBar,
+} from "@/components/placeholder-vanish";
 
 export default function CoursePage({
 	params,
@@ -91,7 +95,7 @@ export default function CoursePage({
 				<CardHeader>
 					<CardTitle className="text-lg">{course.title}</CardTitle>
 					<CardDescription className="shadow-none">
-						{course.author} - {" "}
+						{course.author} -{" "}
 						{course.date && course.date !== "-" ? course.date : "Null"}
 					</CardDescription>
 				</CardHeader>
@@ -148,14 +152,18 @@ export default function CoursePage({
 
 	return (
 		<div className="h-[100vh] px-2.5 md:px-20 mx-auto pb-10 pt-5">
-			<h1 className="text-3xl font-thin my-4 ms-5">
-				Results for &quot;
-				<strong className="font-extrabold underline underline-offset-8">
-					{decodeURIComponent(courseCode)}
-				</strong>
-				&quot;
-			</h1>
-
+			<div className="flex flex-col md:flex-row justify-between px-4 md:px-6 mb-4 md:mb-6">
+				<h1 className="order-2 md:order-1 text-2xl md:text-3xl font-thin my-4 ms-5">
+					Results for &quot;
+					<strong className="font-extrabold underline underline-offset-8">
+						{decodeURIComponent(courseCode)}
+					</strong>
+					&quot;
+				</h1>
+				<div className="order-1 md:order-2 flex justify-center md:justify-end mt-4 md:mt-0">
+					<SearchBar />
+				</div>
+			</div>
 			{loadingCourseList ? (
 				<div className="h-[70vh] flex justify-center items-center">
 					<LoaderIcon className="animate-spin h-20 w-20" />

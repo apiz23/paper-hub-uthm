@@ -1,32 +1,14 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import BlurIn from "@/components/magicui/blur-in";
 import TypingAnimation from "@/components/magicui/typing-animation";
-import { PlaceholdersAndVanishInput } from "@/components/placeholder-vanish";
+import { SearchBar } from "@/components/placeholder-vanish";
 import { toast } from "sonner";
 import { X } from "lucide-react";
 
 export default function Home() {
-	const router = useRouter();
-	const [courseCode, setCourseCode] = useState("");
-	const placeholders = [
-		"Computer Architecture",
-		"BIC10303",
-		"Fluid Mechanics I",
-		"BIT10403",
-		"BIC10103",
-		"Object-Oriented Programming",   
-	];
 	const toastShownRef = useRef(false);
-
-	const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		if (courseCode.trim()) {
-			router.push(`/courses/${encodeURIComponent(courseCode.trim())}`);
-		}
-	};
 
 	useEffect(() => {
 		if (!sessionStorage.getItem("toastShown") && !toastShownRef.current) {
@@ -65,11 +47,7 @@ export default function Home() {
 					/>
 				</div>
 				<div className="max-w-xl mx-auto flex w-4/5 md:w-full items-center md:px-0 px-2">
-					<PlaceholdersAndVanishInput
-						placeholders={placeholders}
-						onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCourseCode(e.target.value)}
-						onSubmit={handleSearch}
-					/>
+					<SearchBar />
 				</div>
 			</div>
 		</>
