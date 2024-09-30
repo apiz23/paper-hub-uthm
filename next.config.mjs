@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+import withPWA from "next-pwa";
+
 const nextConfig = {
 	images: {
 		domains: ["upload.wikimedia.org", "www.uthm.edu.my"],
@@ -13,4 +15,6 @@ const nextConfig = {
 	},
 };
 
-export default nextConfig;
+export default withPWA({
+	dest: "public",
+})(nextConfig);
