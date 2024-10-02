@@ -1,33 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import BlurIn from "@/components/magicui/blur-in";
 import TypingAnimation from "@/components/magicui/typing-animation";
 import { SearchBar } from "@/components/placeholder-vanish";
-import { toast } from "sonner";
-import { X } from "lucide-react";
 
 export default function Home() {
-	const toastShownRef = useRef(false);
-
-	useEffect(() => {
-		if (!sessionStorage.getItem("toastShown") && !toastShownRef.current) {
-			const timer = setTimeout(() => {
-				const toastId = toast.info("Acknowledgement", {
-					description: "Library Tunku Tun Aminah UTHM",
-					duration: Infinity,
-					action: {
-						label: <X />,
-						onClick: () => toast.dismiss(toastId),
-					},
-				});
-				toastShownRef.current = true;
-				sessionStorage.setItem("toastShown", "true");
-			}, 1000);
-
-			return () => clearTimeout(timer);
-		}
-	}, []);
 
 	return (
 		<>

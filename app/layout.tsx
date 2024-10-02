@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import Footer from "@/components/footer";
 import { Toaster } from "sonner";
 import ReactQueryProvider from "@/lib/react-query-provider";
+import LibraryToast from "@/components/libToast";
 
 const inter = Inter({ subsets: ["latin"], weight: ["400"] });
 
@@ -39,6 +40,7 @@ export default function RootLayout({
 					disableTransitionOnChange
 				>
 					<div className="bg-neutral-200 dark:bg-black">
+						<LibraryToast />
 						<Toaster richColors position="top-right" />
 						<Navbar />
 						<div className="relative">
