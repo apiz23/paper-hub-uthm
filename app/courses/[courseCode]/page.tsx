@@ -33,10 +33,7 @@ import { useQuery } from "react-query";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { fetchCourseList, fetchCourseDetails } from "@/lib/api/courseApi";
 import confetti from "canvas-confetti";
-import {
-	PlaceholdersAndVanishInput,
-	SearchBar,
-} from "@/components/placeholder-vanish";
+import { SearchBar } from "@/components/placeholder-vanish";
 
 export default function CoursePage({
 	params,
@@ -103,7 +100,7 @@ export default function CoursePage({
 				<CardContent className="flex justify-end">
 					<Button
 						variant="ghost"
-						className="cursor-pointer border shadow-sm bg-white dark:bg-neutral-800 dark:hover:bg-neutral-600"
+						className="cursor-pointer border shadow-sm bg-white dark:bg-neutral-600 dark:hover:bg-neutral-500"
 						onClick={() => handleFetchCourseDetails(course.link)}
 					>
 						View

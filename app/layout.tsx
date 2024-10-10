@@ -9,6 +9,7 @@ import Footer from "@/components/footer";
 import { Toaster } from "sonner";
 import ReactQueryProvider from "@/lib/react-query-provider";
 import LibraryToast from "@/components/libToast";
+import { BackgroundLines } from "@/components/background-lines";
 
 const inter = Inter({ subsets: ["latin"], weight: ["400"] });
 
@@ -39,9 +40,9 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-					<div className="bg-neutral-200 dark:bg-black">
+					<div className="bg-white dark:bg-black">
 						<LibraryToast />
-						<Toaster richColors position="top-right" />
+						<Toaster richColors position="bottom-right" />
 						<Navbar />
 						<div className="relative">
 							<DotPattern
@@ -51,7 +52,7 @@ export default function RootLayout({
 								cy={1}
 								cr={1}
 								className={cn(
-									"absolute inset-0 z-0 [mask-image:radial-gradient(200px_circle_at_center,white,transparent)] md:[mask-image:radial-gradient(400px_circle_at_center,white,transparent)]"
+									"absolute inset-0 z-0 [mask-image:radial-gradient(200px_circle_at_center,white,transparent)] md:[mask-image:radial-gradient(300px_circle_at_center,white,transparent)]"
 								)}
 							/>
 							<div className="relative z-10">
