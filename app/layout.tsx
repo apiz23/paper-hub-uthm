@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Ubuntu, Poppins } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/lib/theme-provider";
 import Navbar from "@/components/navbar";
@@ -8,8 +8,9 @@ import { cn } from "@/lib/utils";
 import Footer from "@/components/footer";
 import { Toaster } from "sonner";
 import LibraryToast from "@/components/libToast";
+import { Analytics } from "@vercel/analytics/react";
 
-const inter = Poppins({ subsets: ["latin"], weight: ["400"] });
+const inter = Inter({ subsets: ["latin"], weight: ["400"] });
 
 export const metadata: Metadata = {
 	title: "UTHM Paper Hub",
@@ -53,6 +54,7 @@ export default function RootLayout({
 						</div>
 						<Footer />
 					</div>
+					<Analytics />
 				</ThemeProvider>
 			</body>
 		</html>
