@@ -3,12 +3,8 @@
 import BlurIn from "@/components/magicui/blur-in";
 import { SearchBar } from "@/components/placeholder-vanish";
 import { LineShadowText } from "@/components/ui/line-shadow-text";
-import { useTheme } from "next-themes";
 
 export default function Home() {
-	const theme = useTheme();
-	const shadowColor = theme.resolvedTheme === "dark" ? "white" : "black";
-
 	return (
 		<>
 			<div className="min-h-screen">
@@ -19,7 +15,7 @@ export default function Home() {
 					/> */}
 					<h1 className="text-balance text-4xl text-center font-semibold leading-none tracking-tighter sm:text-6xl md:text-6xl lg:text-7xl">
 						Paper Hub
-						<LineShadowText className="italic mx-2" shadowColor={shadowColor}>
+						<LineShadowText className="italic mx-2" shadowColor="white">
 							UTHM
 						</LineShadowText>
 					</h1>
