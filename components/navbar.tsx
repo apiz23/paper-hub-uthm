@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Separator } from "./ui/separator";
 import { ModeToggle } from "./theme-btn";
+
 export default function Navbar() {
 	const primaryLinks = [
 		{
@@ -88,10 +89,10 @@ export default function Navbar() {
 									</Tooltip>
 								</DockIcon>
 							))}
-							<Separator orientation="vertical" />
+							{/* <Separator orientation="vertical" />
 							<DockIcon>
 								<ModeToggle />
-							</DockIcon>
+							</DockIcon> */}
 						</Dock>
 					</TooltipProvider>
 				</div>

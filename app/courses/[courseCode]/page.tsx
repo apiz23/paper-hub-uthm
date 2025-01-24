@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import {
 	Card,
 	CardContent,
@@ -29,11 +29,11 @@ import {
 import { Download, LoaderIcon } from "lucide-react";
 import { CourseCodeList, CourseData } from "@/lib/interface/interface";
 import Link from "next/link";
-import { useQuery } from "react-query";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { fetchCourseList, fetchCourseDetails } from "@/lib/api/courseApi";
 import confetti from "canvas-confetti";
 import { SearchBar } from "@/components/placeholder-vanish";
+import { toast } from "sonner";
 
 export default function CoursePage({
 	params,
@@ -42,36 +42,64 @@ export default function CoursePage({
 }) {
 	const { courseCode } = params;
 	const [courseData, setCourseData] = useState<CourseData | null>(null);
+	const [courseList, setCourseList] = useState<CourseCodeList[]>([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const itemsPerPage = 15;
 	const [drawerOpen, setDrawerOpen] = useState(false);
+	const [loadingCourseList, setLoadingCourseList] = useState(false);
 
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-	const { data: courseList, isLoading: loadingCourseList } = useQuery(
-		["courseList", courseCode],
-		() => fetchCourseList(apiUrl!, courseCode),
-		{
-			enabled: !!courseCode,
-			staleTime: 300000,
-			onSuccess: (data) => {
-				data.sort((a: CourseCodeList, b: CourseCodeList) => {
-					const dateA = new Date(a.date);
-					const dateB = new Date(b.date);
-					return dateB.getTime() - dateA.getTime();
-				});
-			},
-		}
-	);
+	useEffect(() => {
+		const fetchCourses = async () => {
+			if (!apiUrl) {
+				toast.error("API URL is not defined.");
+				return;
+			}
+
+			setLoadingCourseList(true);
+			try {
+				const data = await fetchCourseList(apiUrl, courseCode);
+
+				if (Array.isArray(data)) {
+					data.sort((a: CourseCodeList, b: CourseCodeList) => {
+						const dateA = new Date(a.date);
+						const dateB = new Date(b.date);
+						if (!isNaN(dateA.getTime()) && !isNaN(dateB.getTime())) {
+							return dateB.getTime() - dateA.getTime();
+						}
+						return 0;
+					});
+					setCourseList(data);
+				} else {
+					toast.error("Expected an array, but received an unexpected format.");
+					console.error("Expected an array, but got:", data);
+				}
+			} catch (error: any) {
+				toast.error("Error fetching course list:", error.message);
+				console.error("Error fetching course list:", error);
+			} finally {
+				setLoadingCourseList(false);
+			}
+		};
+
+		fetchCourses();
+	}, [courseCode, apiUrl]);
 
 	const handleFetchCourseDetails = useCallback(
 		async (link: string) => {
+			if (!apiUrl) {
+				toast.error("API URL is not defined.");
+				return;
+			}
+
 			try {
-				const data = await fetchCourseDetails(apiUrl!, link);
+				const data = await fetchCourseDetails(apiUrl, link);
 				setCourseData(data);
 				setDrawerOpen(true);
 			} catch (error: any) {
-				console.error(error);
+				toast.error("Error fetching course details:", error.message);
+				console.error("Error fetching course details:", error);
 			}
 		},
 		[apiUrl]
@@ -91,7 +119,7 @@ export default function CoursePage({
 			>
 				<CardHeader>
 					<CardTitle className="text-lg">{course.title}</CardTitle>
-					<CardDescription className="shadow-none">
+					<CardDescription className="shadow-none ">
 						{course.author} -{" "}
 						{course.date && course.date !== "-" ? course.date : "Null"}
 					</CardDescription>
@@ -157,7 +185,7 @@ export default function CoursePage({
 					</strong>
 					&quot;
 				</h1>
-				<div className="order-1 md:order-2 flex justify-center md:justify-end mt-4 md:mt-0">
+				<div className="order-1 md:order-2 flex justify-center md:justify-end mt-4">
 					<SearchBar />
 				</div>
 			</div>
@@ -192,8 +220,8 @@ export default function CoursePage({
 							)}
 						</PaginationContent>
 					</Pagination>
-					<ScrollArea className="h-[54vh] md:h-[70vh] p-4">
-						<div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+					<ScrollArea className="h-[54vh] lg:h-[60vh] 2xl:h-[70vh] p-4">
+						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 							{courseListCards}
 						</div>
 					</ScrollArea>
@@ -216,7 +244,7 @@ export default function CoursePage({
 			)}
 			{courseData && (
 				<Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
-					<DrawerContent className="md:max-w-3xl mx-2 md:mx-auto">
+					<DrawerContent className="md:max-w-3xl mx-2 md:mx-auto bg-black">
 						<DrawerHeader>
 							<DrawerTitle className="text-3xl mb-10">
 								{typeof courseData?.details["Title"] === "string"

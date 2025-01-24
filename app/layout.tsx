@@ -7,11 +7,9 @@ import DotPattern from "@/components/magicui/dot-pattern";
 import { cn } from "@/lib/utils";
 import Footer from "@/components/footer";
 import { Toaster } from "sonner";
-import ReactQueryProvider from "@/lib/react-query-provider";
 import LibraryToast from "@/components/libToast";
-import { BackgroundLines } from "@/components/background-lines";
 
-const inter = Inter({ subsets: ["latin"], weight: ["400"] });
+const inter = Poppins({ subsets: ["latin"], weight: ["400"] });
 
 export const metadata: Metadata = {
 	title: "UTHM Paper Hub",
@@ -29,14 +27,10 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<head>
-				<link rel="icon" href="/icon.svg" />
-				<link rel="manifest" href="/manifest.json" />
-			</head>
 			<body className={inter.className}>
 				<ThemeProvider
 					attribute="class"
-					defaultTheme="system"
+					defaultTheme="dark"
 					enableSystem
 					disableTransitionOnChange
 				>
@@ -55,9 +49,7 @@ export default function RootLayout({
 									"absolute inset-0 z-0 [mask-image:radial-gradient(200px_circle_at_center,white,transparent)] md:[mask-image:radial-gradient(300px_circle_at_center,white,transparent)]"
 								)}
 							/>
-							<div className="relative z-10">
-								<ReactQueryProvider>{children}</ReactQueryProvider>
-							</div>
+							<div className="relative z-10">{children}</div>
 						</div>
 						<Footer />
 					</div>
