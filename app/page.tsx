@@ -3,6 +3,9 @@
 import BlurIn from "@/components/magicui/blur-in";
 import { SearchBar } from "@/components/placeholder-vanish";
 import { LineShadowText } from "@/components/ui/line-shadow-text";
+import { Bentham } from "next/font/google";
+
+const bentham = Bentham({ subsets: ["latin"], weight: ["400"] });
 
 export default function Home() {
 	return (
@@ -13,7 +16,9 @@ export default function Home() {
 						className="text-4xl lg:text-7xl text-black dark:text-white font-bold inter-var text-center uppercase"
 						text="paper hub uthm"
 					/> */}
-					<h1 className="text-balance text-4xl text-center font-semibold leading-none tracking-tighter sm:text-6xl md:text-6xl lg:text-7xl">
+					<h1
+						className={`${bentham.className} text-balance text-4xl text-center font-semibold leading-none tracking-tighter sm:text-6xl md:text-6xl lg:text-7xl`}
+					>
 						Paper Hub
 						<LineShadowText className="italic mx-2" shadowColor="white">
 							UTHM
