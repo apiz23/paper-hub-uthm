@@ -116,6 +116,7 @@ export default function CoursePage({
 			<Card
 				key={index}
 				className="dark:bg-black bg-slate-200/70 dark:hover:bg-neutral-800 hover:bg-neutral-100 min-h-[18vh] flex flex-col justify-between"
+				onClick={() => handleFetchCourseDetails(course.link)}
 			>
 				<CardHeader>
 					<CardTitle className="text-lg">{course.title}</CardTitle>
@@ -284,7 +285,13 @@ export default function CoursePage({
 						</DrawerHeader>
 						<DrawerFooter className="grid grid-cols-2 gap-4">
 							{courseData?.downloadLinks.map((link, index) => (
-								<a key={index} href={link.fileUrl} download className="block w-full">
+								<a
+									key={index}
+									href={link.fileUrl}
+									target="_blank"
+									download
+									className="block w-full"
+								>
 									<Button
 										key={index}
 										className="w-full bg-blue-800 text-white hover:bg-blue-900"
