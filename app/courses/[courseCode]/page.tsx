@@ -30,7 +30,7 @@ import { Download, LoaderIcon } from "lucide-react";
 import { CourseCodeList, CourseData } from "@/lib/interface/interface";
 import Link from "next/link";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { fetchCourseList, fetchCourseDetails } from "@/lib/api/courseApi";
+import { fetchCourseDetails, fetchCourseList } from "@/lib/api/courseApi";
 import confetti from "canvas-confetti";
 import { SearchBar } from "@/components/placeholder-vanish";
 import { toast } from "sonner";
