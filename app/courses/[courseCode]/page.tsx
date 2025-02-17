@@ -34,6 +34,7 @@ import { fetchCourseDetails, fetchCourseList } from "@/lib/api/courseApi";
 import confetti from "canvas-confetti";
 import { SearchBar } from "@/components/placeholder-vanish";
 import { toast } from "sonner";
+import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-btn";
 
 export default function CoursePage({
 	params,
@@ -127,13 +128,12 @@ export default function CoursePage({
 				</CardHeader>
 				<div className="flex-grow"></div>
 				<CardContent className="flex justify-end">
-					<Button
-						variant="ghost"
+					<InteractiveHoverButton
 						className="cursor-pointer border shadow-sm bg-white dark:bg-neutral-600 dark:hover:bg-neutral-500"
 						onClick={() => handleFetchCourseDetails(course.link)}
 					>
 						View
-					</Button>
+					</InteractiveHoverButton>
 				</CardContent>
 			</Card>
 		));
@@ -197,9 +197,10 @@ export default function CoursePage({
 			) : courseList?.length > 0 ? (
 				<>
 					<Pagination>
-						<PaginationContent className="mb-5">
+						<PaginationContent className="mb-5 gap-4">
 							<PaginationItem>
 								<PaginationPrevious
+								className="bg-black hover:bg-neutral-700"
 									onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
 								/>
 							</PaginationItem>
@@ -212,6 +213,7 @@ export default function CoursePage({
 								<>
 									<PaginationItem>
 										<PaginationNext
+										className="bg-black hover:bg-neutral-400"
 											onClick={() =>
 												handlePageChange(Math.min(currentPage + 1, totalPages))
 											}

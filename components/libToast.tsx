@@ -10,13 +10,13 @@ const LibraryToast = () => {
 	useEffect(() => {
 		if (!sessionStorage.getItem("toastShown") && !toastShownRef.current) {
 			const timer = setTimeout(() => {
-				const toastId = toast.info("Acknowledgement", {
+				const toastId = toast.message("Acknowledgement", {
 					description: "Library Tunku Tun Aminah UTHM",
-					duration: Infinity,
-					action: {
-						label: <X />,
-						onClick: () => toast.dismiss(toastId),
-					},
+					duration: 4000,
+					// action: {
+					// 	label: <X />,
+					// 	onClick: () => toast.dismiss(toastId),
+					// },
 				});
 				toastShownRef.current = true;
 				sessionStorage.setItem("toastShown", "true");

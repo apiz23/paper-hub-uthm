@@ -55,15 +55,16 @@ export default function Navbar() {
 
 	return (
 		<>
-			<div className="fixed bottom-20 md:bottom-14 left-0 right-0 z-50">
+			<div className="fixed bottom-20 md:bottom-14 left-0 right-0 z-40">
 				<div className="relative flex justify-center">
 					<TooltipProvider>
 						<Dock
 							direction="middle"
-							className="bg-neutral-100/50 dark:bg-neutral-900"
+							className="bg-transparent border-2 border-neutral-700 gap-4"
+							magnification={50}
 						>
 							{primaryLinks.map((item, index) => (
-								<DockIcon key={index}>
+								<DockIcon key={index} className="bg-black/10 dark:bg-white/10">
 									<Tooltip>
 										<TooltipTrigger asChild>
 											<Link href={item.href}>{item.icon}</Link>
@@ -76,7 +77,7 @@ export default function Navbar() {
 							))}
 							<Separator orientation="vertical" />
 							{icons.map((item, index) => (
-								<DockIcon key={index}>
+								<DockIcon key={index} className="bg-black/10 dark:bg-white/10">
 									<Tooltip>
 										<TooltipTrigger asChild>
 											<Link href={item.href} target="_blank">
