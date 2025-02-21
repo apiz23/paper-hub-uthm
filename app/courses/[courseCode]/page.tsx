@@ -35,6 +35,13 @@ import confetti from "canvas-confetti";
 import { SearchBar } from "@/components/placeholder-vanish";
 import { toast } from "sonner";
 import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-btn";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 
 export default function CoursePage({
 	params,
@@ -48,6 +55,7 @@ export default function CoursePage({
 	const itemsPerPage = 15;
 	const [drawerOpen, setDrawerOpen] = useState(false);
 	const [loadingCourseList, setLoadingCourseList] = useState(false);
+	const [selectedYear, setSelectedYear] = useState<string | null>(null);
 
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -106,11 +114,20 @@ export default function CoursePage({
 		[apiUrl]
 	);
 
+	const filteredCourseList = useMemo(() => {
+		if (!selectedYear) return courseList;
+
+		return courseList.filter((course: CourseCodeList) => {
+			const courseDate = new Date(course.date);
+			return courseDate.getFullYear().toString() === selectedYear;
+		});
+	}, [courseList, selectedYear]);
+
 	const paginatedCourseList = useMemo(() => {
 		const startIndex = (currentPage - 1) * itemsPerPage;
 		const endIndex = startIndex + itemsPerPage;
-		return courseList?.slice(startIndex, endIndex);
-	}, [courseList, currentPage, itemsPerPage]);
+		return filteredCourseList?.slice(startIndex, endIndex);
+	}, [filteredCourseList, currentPage, itemsPerPage]);
 
 	const courseListCards = useMemo(() => {
 		return paginatedCourseList?.map((course: CourseCodeList, index: number) => (
@@ -176,6 +193,18 @@ export default function CoursePage({
 		setCurrentPage(newPage);
 	};
 
+	const uniqueYears = useMemo(() => {
+		const yearsSet = new Set(
+			courseList
+				.map((course: CourseCodeList) => {
+					const date = new Date(course.date);
+					return isNaN(date.getTime()) ? null : date.getFullYear().toString();
+				})
+				.filter((year) => year !== null)
+		);
+		return Array.from(yearsSet).sort((a, b) => parseInt(b) - parseInt(a));
+	}, [courseList]);
+
 	return (
 		<div className="h-[100vh] px-2.5 md:px-20 mx-auto pb-10 pt-5">
 			<div className="flex flex-col md:flex-row justify-between px-4 md:px-6 mb-4 md:mb-6">
@@ -200,7 +229,7 @@ export default function CoursePage({
 						<PaginationContent className="mb-5 gap-4">
 							<PaginationItem>
 								<PaginationPrevious
-								className="bg-black hover:bg-neutral-700"
+									className="bg-black hover:bg-neutral-700"
 									onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
 								/>
 							</PaginationItem>
@@ -213,7 +242,7 @@ export default function CoursePage({
 								<>
 									<PaginationItem>
 										<PaginationNext
-										className="bg-black hover:bg-neutral-400"
+											className="bg-black hover:bg-neutral-400"
 											onClick={() =>
 												handlePageChange(Math.min(currentPage + 1, totalPages))
 											}
@@ -223,8 +252,30 @@ export default function CoursePage({
 							)}
 						</PaginationContent>
 					</Pagination>
+					<div className="flex justify-end me-5">
+						<Select
+							value={selectedYear || "all"}
+							onValueChange={(value) =>
+								setSelectedYear(value === "all" ? null : value)
+							}
+						>
+							<SelectTrigger className="w-[180px] bg-neutral-950">
+								<SelectValue placeholder="Filter by Year" />
+							</SelectTrigger>
+							<SelectContent className="bg-neutral-950">
+								<ScrollArea className="h-[20vh]">
+									<SelectItem value="all">All Years</SelectItem>
+									{uniqueYears.map((year) => (
+										<SelectItem key={year} value={year}>
+											{year}
+										</SelectItem>
+									))}
+								</ScrollArea>
+							</SelectContent>
+						</Select>
+					</div>
 					<ScrollArea className="h-[54vh] lg:h-[60vh] 2xl:h-[70vh] p-4">
-						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
 							{courseListCards}
 						</div>
 					</ScrollArea>
