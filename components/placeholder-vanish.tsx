@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { useSearchHistory } from "./searchHistoryContext";
 
 export function PlaceholdersAndVanishInput({
 	placeholders,
@@ -280,6 +281,8 @@ export function PlaceholdersAndVanishInput({
 export function SearchBar() {
 	const router = useRouter();
 	const [courseCode, setCourseCode] = useState("");
+	const { addSearchTerm } = useSearchHistory();
+
 	const placeholders = [
 		"BIC10603",
 		"Computer Architecture",
@@ -289,9 +292,11 @@ export function SearchBar() {
 		"BIC10103",
 		"Object-Oriented Programming",
 	];
+
 	const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (courseCode.trim()) {
+			addSearchTerm(courseCode.trim());
 			router.push(`/courses/${encodeURIComponent(courseCode.trim())}`);
 		}
 	};

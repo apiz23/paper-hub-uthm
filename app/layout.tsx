@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/lib/theme-provider";
-import Navbar from "@/components/navbar";
 import DotPattern from "@/components/magicui/dot-pattern";
 import { cn } from "@/lib/utils";
-import Footer from "@/components/footer";
 import { Toaster } from "sonner";
 import LibraryToast from "@/components/libToast";
 import { Analytics } from "@vercel/analytics/react";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
+import { SearchHistoryProvider } from "@/components/searchHistoryContext";
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["500"] });
 
@@ -29,33 +30,39 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={poppins.className}>
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="dark"
-					enableSystem
-					disableTransitionOnChange
-				>
-					<div className="bg-white dark:bg-black">
-						<LibraryToast />
-						<Toaster richColors position="bottom-right" />
-						<Navbar />
-						<div className="relative">
-							<DotPattern
-								width={15}
-								height={15}
-								cx={1}
-								cy={1}
-								cr={1}
-								className={cn(
-									"absolute inset-0 z-0 [mask-image:radial-gradient(200px_circle_at_center,white,transparent)] md:[mask-image:radial-gradient(300px_circle_at_center,white,transparent)]"
-								)}
-							/>
-							<div className="relative z-10">{children}</div>
-						</div>
-						<Footer />
-					</div>
-					<Analytics />
-				</ThemeProvider>
+				<SidebarProvider>
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="dark"
+						enableSystem
+						disableTransitionOnChange
+					>
+						<SearchHistoryProvider>
+							<AppSidebar />
+							<div className="bg-black w-full h-screen overflow-hidden">
+								<LibraryToast />
+								<Toaster richColors position="bottom-right" />
+								{/* <Navbar /> */}
+								<SidebarTrigger className="m-2" />
+
+								<div className="relative">
+									<DotPattern
+										width={15}
+										height={15}
+										cx={1}
+										cy={1}
+										cr={1}
+										className={cn(
+											"absolute inset-0 z-0 [mask-image:radial-gradient(200px_circle_at_center,white,transparent)] md:[mask-image:radial-gradient(300px_circle_at_center,white,transparent)]"
+										)}
+									/>
+									<div className="relative z-10">{children}</div>
+								</div>
+							</div>
+							<Analytics />
+						</SearchHistoryProvider>
+					</ThemeProvider>
+				</SidebarProvider>
 			</body>
 		</html>
 	);

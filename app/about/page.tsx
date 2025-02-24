@@ -128,8 +128,8 @@ export default function About() {
 	return (
 		<>
 			<section className="min-h-screen p-4">
-				<ScrollArea className="rounded-lg h-[90vh] w-full pb-20">
-					<div className="max-w-xl md:max-w-4xl mx-auto pt-12 md:pt-28 px-2 md:mb-20">
+				<ScrollArea className="rounded-lg h-[90vh] w-full">
+					<div className="max-w-xl md:max-w-4xl mx-auto px-2">
 						<HyperText
 							className="text-3xl md:text-7xl font-bold text-black dark:text-white"
 							text="The Architecture"

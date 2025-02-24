@@ -52,7 +52,7 @@ export default function CoursePage({
 	const [courseData, setCourseData] = useState<CourseData | null>(null);
 	const [courseList, setCourseList] = useState<CourseCodeList[]>([]);
 	const [currentPage, setCurrentPage] = useState(1);
-	const itemsPerPage = 15;
+	const itemsPerPage = 16;
 	const [drawerOpen, setDrawerOpen] = useState(false);
 	const [loadingCourseList, setLoadingCourseList] = useState(false);
 	const [selectedYear, setSelectedYear] = useState<string | null>(null);
