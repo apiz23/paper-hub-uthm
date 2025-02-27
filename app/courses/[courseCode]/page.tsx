@@ -147,7 +147,10 @@ export default function CoursePage({
 				<CardContent className="flex justify-end">
 					<InteractiveHoverButton
 						className="cursor-pointer border shadow-sm bg-white dark:bg-neutral-600 dark:hover:bg-neutral-500"
-						onClick={() => handleFetchCourseDetails(course.link)}
+						onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+							e.stopPropagation();
+							handleFetchCourseDetails(course.link);
+						}}
 					>
 						View
 					</InteractiveHoverButton>
