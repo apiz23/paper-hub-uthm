@@ -1,14 +1,13 @@
 import { toast } from "sonner";
 
-export const fetchCourseList = async (apiUrl: string, courseCode: string) => {
+export const fetchCourseList = async (courseCode: string) => {
 	try {
 		const response = await fetch(
-			`${apiUrl}uthm-lib/list-courses-paper?query=${courseCode}`
+			`/api/uthm-lib/list-courses-paper?query=${courseCode}`
 		);
 		if (!response.ok) {
 			throw new Error("Network response was not ok");
 		}
-		console.log(response.json);
 		return await response.json();
 	} catch (error: any) {
 		toast.error("Failed to fetch course list:", error);
@@ -16,10 +15,10 @@ export const fetchCourseList = async (apiUrl: string, courseCode: string) => {
 	}
 };
 
-export const fetchCourseDetails = async (apiUrl: string, link: string) => {
+export const fetchCourseDetails = async (link: string) => {
 	try {
 		const response = await fetch(
-			`${apiUrl}uthm-lib/course-link-details?url=${link}`
+			`/api/uthm-lib/course-link-details?url=${link}`
 		);
 		if (!response.ok) {
 			throw new Error("Network response was not ok");

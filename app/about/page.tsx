@@ -1,12 +1,11 @@
 "use client";
 
-import CodeBlock from "@/components/codeBlock";
 import BlurIn from "@/components/magicui/blur-in";
 import HyperText from "@/components/magicui/hyper-text";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RiNextjsFill } from "react-icons/ri";
-import { SiNestjs, SiTypescript } from "react-icons/si";
+import { SiTailwindcss, SiTypescript } from "react-icons/si";
 import React, { useRef } from "react";
 import { AnimatedBeam } from "@/components/magicui/animated-beam";
 import { Library, ServerIcon, User } from "lucide-react";
@@ -15,271 +14,162 @@ import Safari from "@/components/magicui/safari";
 import Iphone15Pro from "@/components/magicui/iphone-15-pro";
 
 export default function About() {
-	const containerRef = useRef<HTMLDivElement>(null);
-	const div1Ref = useRef<HTMLDivElement>(null);
-	const div2Ref = useRef<HTMLDivElement>(null);
-	const div3Ref = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const div1Ref = useRef<HTMLDivElement>(null);
+    const div2Ref = useRef<HTMLDivElement>(null);
+    const div3Ref = useRef<HTMLDivElement>(null);
 
-	const fetchListCode = `
-		async listCoursesPaper(query: string): Promise<any[]> {
-			const url = 'http://digitalcollection.uthm.edu.my/simple-search';
-			const params = {
-				location: 'publications',
-				crisID: '',
-				relationName: '',
-				query,
-				rpp: 200,
-				sort_by: 'score',
-				order: 'desc',
-			};
+    return (
+        <>
+            <section className="min-h-screen p-4">
+                <ScrollArea className="rounded-lg h-[90vh] w-full">
+                    <div className="max-w-xl md:max-w-4xl mx-auto px-2 space-y-28">
+                        {/* Hero Section */}
+                        <div className="text-center mt-20">
+                            <HyperText
+                                className="text-4xl text-center md:text-7xl font-bold text-black dark:text-white"
+                                text="About Paper Hub"
+                                duration={100}
+                            />
+                            <BlurIn
+                                word="An unofficial, open-source platform to easily access UTHM's past year papers."
+                                className="text-lg md:text-xl font-bold text-neutral-600 dark:text-neutral-400 mt-4"
+                            />
+                        </div>
 
-			const response = await axios.get(url, { params });
-			const $ = cheerio.load(response.data);
-			const rows = $('table.table tbody tr');
-			const papers = [];
+                        {/* Tech Stack */}
+                        <div className="space-y-10">
+                            <BlurIn
+                                word="What Tech Powers This?"
+                                className="text-3xl md:text-5xl text-center font-bold text-black dark:text-white"
+                            />
+                            <p className="max-w-2xl text-center mx-auto text-neutral-600 dark:text-neutral-400">
+                                Paper Hub is built with a modern, robust tech
+                                stack to ensure a fast, reliable, and seamless
+                                experience for finding the exam papers you need.
+                            </p>
+                            <div className="flex justify-center gap-6 md:gap-10">
+                                <Badge
+                                    variant="outline"
+                                    className="rounded-xl bg-neutral-100 dark:bg-neutral-800 p-4 border-black/10 dark:border-white/10"
+                                >
+                                    <RiNextjsFill className="h-10 md:h-16 w-10 md:w-16 text-black dark:text-white" />
+                                </Badge>
+                                <Badge
+                                    variant="outline"
+                                    className="rounded-xl bg-neutral-100 dark:bg-neutral-800 p-4 border-black/10 dark:border-white/10"
+                                >
+                                    <SiTypescript className="h-10 md:h-16 w-10 md:w-16 text-blue-500" />
+                                </Badge>
+                                <Badge
+                                    variant="outline"
+                                    className="rounded-xl bg-neutral-100 dark:bg-neutral-800 p-4 border-black/10 dark:border-white/10"
+                                >
+                                    <SiTailwindcss className="h-10 md:h-16 w-10 md:w-16 text-cyan-400" />
+                                </Badge>
+                            </div>
+                        </div>
 
-			rows.each((index, element) => {
-				if (index === 0) return;
+                        {/* Architecture */}
+                        <div className="space-y-6">
+                            <BlurIn
+                                word="The Architecture"
+                                className="text-3xl md:text-5xl text-center font-bold text-black dark:text-white"
+                            />
+                            <div
+                                className="relative mx-auto max-w-2xl flex items-center justify-center md:p-0 p-10"
+                                ref={containerRef}
+                            >
+                                <div className="flex h-full w-full flex-col items-stretch justify-between gap-10">
+                                    <div className="flex flex-row justify-between">
+                                        <Circle ref={div1Ref}>
+                                            <User className="text-black size-7" />
+                                        </Circle>
+                                        <Circle ref={div2Ref}>
+                                            <ServerIcon className="text-black size-7" />
+                                        </Circle>
+                                        <Circle ref={div3Ref}>
+                                            <Library className="text-black size-7" />
+                                        </Circle>
+                                    </div>
+                                </div>
+                                <AnimatedBeam
+                                    containerRef={containerRef}
+                                    fromRef={div1Ref}
+                                    toRef={div2Ref}
+                                    startYOffset={10}
+                                    endYOffset={10}
+                                    curvature={-20}
+                                />
+                                <AnimatedBeam
+                                    containerRef={containerRef}
+                                    fromRef={div2Ref}
+                                    toRef={div3Ref}
+                                    startYOffset={10}
+                                    endYOffset={10}
+                                    curvature={-20}
+                                />
+                                <AnimatedBeam
+                                    containerRef={containerRef}
+                                    fromRef={div3Ref}
+                                    toRef={div2Ref}
+                                    startYOffset={-10}
+                                    endYOffset={-10}
+                                    curvature={20}
+                                    reverse
+                                />
+                                <AnimatedBeam
+                                    containerRef={containerRef}
+                                    fromRef={div2Ref}
+                                    toRef={div1Ref}
+                                    startYOffset={-10}
+                                    endYOffset={-10}
+                                    curvature={20}
+                                    reverse
+                                />
+                            </div>
+                            <div className="flex justify-between max-w-2xl mx-auto px-5 text-center font-semibold text-neutral-700 dark:text-neutral-300">
+                                <p className="w-1/3">Your Browser</p>
+                                <p className="w-1/3">Next.js API</p>
+                                <p className="w-1/3">UTHM Library</p>
+                            </div>
+                            <p className="max-w-2xl text-center mx-auto text-neutral-600 dark:text-neutral-400 pt-4">
+                                When you search for a paper, your request is
+                                sent to our Next.js backend. The backend then
+                                fetches data from the UTHM digital library,
+                                processes it, and sends it back to you.
+                            </p>
+                        </div>
 
-				const no = $(element).find('td:nth-child(1)').text().trim();
-				const date = $(element).find('td:nth-child(2)').text().trim();
-				const title = $(element).find('td:nth-child(3) a').text().trim();
-				const link = $(element).find('td:nth-child(3) a').attr('href');
-				const author = $(element).find('td:nth-child(4)').text().trim();
-
-				papers.push({
-					no,
-					title,
-					link,
-					author,
-					date,
-				});
-			});
-			return papers;
-		}
-	`;
-
-	const fetchDetailsCode = `
-		async courseLinkDetails(pageUrl: string): Promise<{
-			downloadLinks: any[];
-			details: Record<string, string | { data: string; URL: string | null }>;
-		}> {
-			const baseUrl = 'http://digitalcollection.uthm.edu.my';
-			const response = await axios.get(\`\${baseUrl}\${pageUrl}\`);
-			const $ = cheerio.load(response.data);
-
-			const downloadLinks = [];
-			const seenUrls = new Set<string>();
-
-			$('a[href]').each((_, element) => {
-				const link = $(element).attr('href');
-				if (link && link.includes('bitstream')) {
-					const fileName = $(element).text().trim();
-					const fileUrl = \`\${baseUrl}\${link}\`;
-
-					if (!seenUrls.has(fileUrl)) {
-						seenUrls.add(fileUrl);
-						downloadLinks.push({ fileName, fileUrl });
-					}
-				}
-			});
-
-			const details: Record<
-				string,
-				string | { data: string; URL: string | null }
-			> = {};
-
-			$('tbody tr').each((_, element) => {
-				const label = $(element)
-				.find('td.metadataFieldLabel')
-				.text()
-				.trim()
-				.replace(/:\\s*$/, '');
-
-				let value: string | { data: string; URL: string | null } = $(element)
-				.find('td.metadataFieldValue')
-				.text()
-				.trim();
-
-				const linkElement = $(element).find('td.metadataFieldValue a');
-
-				if (linkElement.length) {
-				const link = linkElement.attr('href');
-				const linkText = linkElement.text().trim();
-
-				if (
-					label === 'URI' ||
-					label === 'Authors' ||
-					label === 'Appears in Collections'
-				) {
-					value = {
-					data: linkText,
-					URL: link ? \`\${baseUrl}\${link}\` : null,
-					};
-				}
-				}
-
-				details[label] = value;
-			});
-
-			return { downloadLinks, details };
-		}
-	`;
-	return (
-		<>
-			<section className="min-h-screen p-4">
-				<ScrollArea className="rounded-lg h-[90vh] w-full">
-					<div className="max-w-xl md:max-w-4xl mx-auto px-2">
-						<HyperText
-							className="text-3xl md:text-7xl font-bold text-black dark:text-white"
-							text="The Architecture"
-							duration={1000}
-						/>
-						<BlurIn
-							word="What Tech Were Used?"
-							className="text-3xl text-start mx-2 font-bold text-black dark:text-white"
-						/>
-						<div className="py-10 gap-4">
-							<div className="mb-10">
-								<p className="max-w-2xl text-start">
-									Next.js specificly in TypeScript as the Frontend Framework & Nest.js as
-									the Backend Framework
-								</p>
-							</div>
-							<div className="flex justify-center md:justify-end md:me-10 gap-10">
-								<Badge
-									variant="outline"
-									className="rounded-xl bg-neutral-600 bg-opacity-80 hover:bg-white p-4"
-								>
-									<RiNextjsFill className="h-10 md:h-20 w-10 md:w-20 text-neutral-900" />
-								</Badge>
-								<Badge
-									variant="outline"
-									className="rounded-xl bg-neutral-600 bg-opacity-80 hover:bg-white p-4"
-								>
-									<SiTypescript className="h-10 md:h-20 w-10 md:w-20 text-blue-500" />
-								</Badge>
-								<Badge
-									variant="outline"
-									className="rounded-xl bg-neutral-600 bg-opacity-80 hover:bg-white p-4"
-								>
-									<SiNestjs className="h-10 md:h-20 w-10 md:w-20 text-red-500" />
-								</Badge>
-							</div>
-						</div>
-					</div>
-					<div className="max-w-xl md:max-w-4xl mx-auto md:mt-10">
-						<div
-							className="relative mx-auto max-w-2xl flex items-center justify-center md:p-0 p-10 md:shadow-xl"
-							ref={containerRef}
-						>
-							<div className="flex h-full w-full flex-col items-stretch justify-between gap-10">
-								<div className="flex flex-row justify-between">
-									<Circle ref={div1Ref}>
-										<User className="text-black size-7" />
-									</Circle>
-									<Circle ref={div2Ref}>
-										<ServerIcon className="text-black size-7" />
-									</Circle>
-									<Circle ref={div3Ref}>
-										<Library className="text-black size-7" />
-									</Circle>
-								</div>
-							</div>
-
-							<AnimatedBeam
-								containerRef={containerRef}
-								fromRef={div1Ref}
-								toRef={div2Ref}
-								startYOffset={10}
-								endYOffset={10}
-								curvature={-20}
-							/>
-
-							<AnimatedBeam
-								containerRef={containerRef}
-								fromRef={div2Ref}
-								toRef={div3Ref}
-								startYOffset={10}
-								endYOffset={10}
-								curvature={-20}
-							/>
-
-							<AnimatedBeam
-								containerRef={containerRef}
-								fromRef={div3Ref}
-								toRef={div2Ref}
-								startYOffset={-10}
-								endYOffset={-10}
-								curvature={20}
-								reverse
-							/>
-
-							<AnimatedBeam
-								containerRef={containerRef}
-								fromRef={div2Ref}
-								toRef={div1Ref}
-								startYOffset={-10}
-								endYOffset={-10}
-								curvature={20}
-								reverse
-							/>
-						</div>
-					</div>
-					<div className="md:p-10 px-10">
-						<div className="flex justify-between max-w-2xl mx-auto pb-20 px-5">
-							<p>User</p>
-							<p>Backend</p>
-							<p>Library</p>
-						</div>
-					</div>
-					<div className="p-4 max-w-4xl mx-auto relative space-y-10 mb-20 md:mb-32">
-						<BlurIn
-							className="text-3xl md:text-7xl font-bold text-black dark:text-white mb-10 capitalize"
-							word="responsive design"
-						/>
-						<div className="px-2">
-							<Safari
-								url="https://paper-hub-uthm.vercel.app/"
-								className="size-full"
-								src="/UI1.png"
-							/>
-							<p className="text-center w-full text-2xl font-semibold my-5">Laptop</p>
-						</div>
-						<div className="px-2">
-							<Iphone15Pro className="size-1/2 md:size-1/3 mx-auto" src="/UI2.png" />
-							<p className="text-center w-full text-2xl font-semibold my-5">Mobile</p>
-						</div>
-					</div>
-					<BlurIn
-						word="Nest.js code sample"
-						className="text-3xl md:text-7xl capitalize text-center font-bold text-black dark:text-white"
-					/>
-					<div className="max-w-4xl mx-auto md:block hidden md:pb-20">
-						<div className="max-w-4xl p-4 mx-auto mt-10">
-							<h3 className="mb-4 scroll-m-20 text-2xl font-semibold tracking-tight">
-								How to Fetch the list of searched subject
-							</h3>
-							<ScrollArea className="rounded-lg h-[40vh]">
-								<CodeBlock language="javascript" codeString={fetchListCode} />
-							</ScrollArea>
-						</div>
-						<div className="max-w-4xl p-4 mx-auto mt-10">
-							<h3 className="mb-4 scroll-m-20 text-2xl font-semibold tracking-tight">
-								How to Fetch the details of the subject paper
-							</h3>
-							<ScrollArea className="rounded-lg h-[40vh]">
-								<CodeBlock language="javascript" codeString={fetchDetailsCode} />
-							</ScrollArea>
-						</div>
-					</div>
-					<div className="lg:hidden flex justify-center md:pb-20">
-						<p className="mt-6 border-l-2 rounded-r-md pl-6 bg-neutral-800 bg-opacity-70 p-2">
-							Open in Desktop View
-						</p>
-					</div>
-				</ScrollArea>
-			</section>
-		</>
-	);
+                        {/* Responsive Design */}
+                        <div className="space-y-10 pb-20">
+                            <BlurIn
+                                className="text-3xl md:text-5xl font-bold text-black dark:text-white text-center"
+                                word="Accessible Anywhere"
+                            />
+                            <div className="px-2">
+                                <Safari
+                                    url="https://paper-hub-uthm.vercel.app/"
+                                    className="size-full"
+                                    src="/UI1.png"
+                                />
+                                <p className="text-center w-full text-2xl font-semibold my-5">
+                                    Desktop
+                                </p>
+                            </div>
+                            <div className="px-2">
+                                <Iphone15Pro
+                                    className="size-1/2 md:size-1/3 mx-auto"
+                                    src="/UI2.png"
+                                />
+                                <p className="text-center w-full text-2xl font-semibold my-5">
+                                    Mobile
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </ScrollArea>
+            </section>
+        </>
+    );
 }
