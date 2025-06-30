@@ -3,13 +3,25 @@ import axios from "axios";
 import * as cheerio from "cheerio";
 
 export async function GET(request: NextRequest) {
+    // Handle CORS preflight
+    if (request.method === "OPTIONS") {
+        return new NextResponse(null, {
+            status: 204,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET,OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type",
+            },
+        });
+    }
+
     const { searchParams } = new URL(request.url);
     const pageUrl = searchParams.get("url");
 
     if (!pageUrl) {
         return NextResponse.json(
             { error: "URL parameter is required" },
-            { status: 400 }
+            { status: 400, headers: { "Access-Control-Allow-Origin": "*" } }
         );
     }
 
@@ -75,12 +87,27 @@ export async function GET(request: NextRequest) {
             }
         });
 
-        return NextResponse.json({ downloadLinks, details });
+        return NextResponse.json(
+            { downloadLinks, details },
+            { headers: { "Access-Control-Allow-Origin": "*" } }
+        );
     } catch (error) {
         console.error(error);
         return NextResponse.json(
             { error: "Failed to fetch data" },
-            { status: 500 }
+            { status: 500, headers: { "Access-Control-Allow-Origin": "*" } }
         );
     }
+}
+
+// Also export OPTIONS handler for Next.js API route
+export function OPTIONS() {
+    return new NextResponse(null, {
+        status: 204,
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET,OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+        },
+    });
 }
