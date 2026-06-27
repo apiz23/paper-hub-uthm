@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
     Card,
     CardContent,
@@ -17,31 +17,31 @@ import {
     DrawerHeader,
     DrawerTitle,
 } from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
 import {
-    Pagination,
-    PaginationContent,
-    PaginationItem,
-    PaginationLink,
-    PaginationPrevious,
-    PaginationNext,
-} from "@/components/ui/pagination";
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter,
+    DialogClose,
+} from "@/components/ui/dialog"; // use Dialog for desktop
+import { Button } from "@/components/ui/button";
 import { Download, LoaderIcon } from "lucide-react";
 import { CourseCodeList, CourseData } from "@/lib/interface/interface";
 import Link from "next/link";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { fetchCourseDetails, fetchCourseList } from "@/lib/api/courseApi";
 import confetti from "canvas-confetti";
 import { SearchBar } from "@/components/placeholder-vanish";
 import { toast } from "sonner";
-import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-btn";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
 
 export default function CoursePage({
     params,
@@ -51,173 +51,147 @@ export default function CoursePage({
     const { courseCode } = params;
     const [courseData, setCourseData] = useState<CourseData | null>(null);
     const [courseList, setCourseList] = useState<CourseCodeList[]>([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 16;
-    const [drawerOpen, setDrawerOpen] = useState(false);
-    const [loadingCourseList, setLoadingCourseList] = useState(false);
-    const [selectedYear, setSelectedYear] = useState<string | null>(null);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+    const [loadingHandle, setLoadingHandle] = useState<string | null>(null);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     useEffect(() => {
         const fetchCourses = async () => {
-            setLoadingCourseList(true);
+            setLoading(true);
             try {
                 const data = await fetchCourseList(courseCode);
-
                 if (Array.isArray(data)) {
-                    data.sort((a: CourseCodeList, b: CourseCodeList) => {
-                        const dateA = new Date(a.date);
-                        const dateB = new Date(b.date);
-                        if (
-                            !isNaN(dateA.getTime()) &&
-                            !isNaN(dateB.getTime())
-                        ) {
-                            return dateB.getTime() - dateA.getTime();
-                        }
-                        return 0;
-                    });
-                    setCourseList(data);
-                } else {
-                    toast.error(
-                        "Expected an array, but received an unexpected format."
+                    const sortedData = data.sort(
+                        (a, b) =>
+                            new Date(b.date).getTime() -
+                            new Date(a.date).getTime()
                     );
-                    console.error("Expected an array, but got:", data);
+                    setCourseList(sortedData);
+                } else {
+                    toast.error("Unexpected data format received");
                 }
             } catch (error: any) {
-                toast.error("Error fetching course list:", error.message);
-                console.error("Error fetching course list:", error);
+                toast.error("Error fetching course list: " + error.message);
             } finally {
-                setLoadingCourseList(false);
+                setLoading(false);
             }
         };
 
         fetchCourses();
     }, [courseCode]);
 
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [selectedYear]);
-
-    const handleFetchCourseDetails = useCallback(async (link: string) => {
+    const handleViewDetails = async (handle: string) => {
+        if (loadingHandle) return;
+        setLoadingHandle(handle);
         try {
-            const data = await fetchCourseDetails(link);
+            const data = await fetchCourseDetails(handle);
             setCourseData(data);
-            setDrawerOpen(true);
+            setModalOpen(true);
         } catch (error: any) {
-            toast.error("Error fetching course details:", error.message);
-            console.error("Error fetching course details:", error);
+            toast.error("Error fetching course details: " + error.message);
+        } finally {
+            setLoadingHandle(null);
         }
-    }, []);
-
-    const filteredCourseList = useMemo(() => {
-        if (!selectedYear) return courseList;
-
-        return courseList.filter((course: CourseCodeList) => {
-            const courseDate = new Date(course.date);
-            return courseDate.getFullYear().toString() === selectedYear;
-        });
-    }, [courseList, selectedYear]);
-
-    const paginatedCourseList = useMemo(() => {
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        return filteredCourseList?.slice(startIndex, endIndex);
-    }, [filteredCourseList, currentPage, itemsPerPage]);
-
-    const courseListCards = useMemo(() => {
-        return paginatedCourseList?.map(
-            (course: CourseCodeList, index: number) => (
-                <Card
-                    key={index}
-                    className="dark:bg-black bg-slate-200/70 dark:hover:bg-neutral-800 hover:bg-neutral-100 min-h-[18vh] flex flex-col justify-between"
-                    onClick={() => handleFetchCourseDetails(course.link)}
-                >
-                    <CardHeader>
-                        <CardTitle className="text-lg">
-                            {course.title}
-                        </CardTitle>
-                        <CardDescription className="shadow-none ">
-                            {course.author} -{" "}
-                            {course.date && course.date !== "-"
-                                ? course.date
-                                : "Null"}
-                        </CardDescription>
-                    </CardHeader>
-                    <div className="flex-grow"></div>
-                    <CardContent className="flex justify-end">
-                        <InteractiveHoverButton
-                            className="cursor-pointer border shadow-sm bg-white dark:bg-neutral-600 dark:hover:bg-neutral-500"
-                            onClick={(
-                                e: React.MouseEvent<HTMLButtonElement>
-                            ) => {
-                                e.stopPropagation();
-                                handleFetchCourseDetails(course.link);
-                            }}
-                        >
-                            View
-                        </InteractiveHoverButton>
-                    </CardContent>
-                </Card>
-            )
-        );
-    }, [paginatedCourseList, handleFetchCourseDetails]);
+    };
 
     const triggerConfetti = () => {
-        const end = Date.now() + 3 * 1000;
-        const colors = ["#FF204E", "#836FFF", "#15F5BA", "#F0F3FF"];
-        const frame = () => {
-            if (Date.now() > end) return;
-
-            confetti({
-                particleCount: 2,
-                angle: 60,
-                spread: 55,
-                startVelocity: 60,
-                origin: { x: 0, y: 0.5 },
-                colors: colors,
-            });
-            confetti({
-                particleCount: 2,
-                angle: 120,
-                spread: 55,
-                startVelocity: 60,
-                origin: { x: 1, y: 0.5 },
-                colors: colors,
-            });
-
-            requestAnimationFrame(frame);
-        };
-
-        frame();
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+        });
     };
 
-    const totalPages = useMemo(() => {
-        return filteredCourseList
-            ? Math.ceil(filteredCourseList.length / itemsPerPage)
-            : 1;
-    }, [filteredCourseList, itemsPerPage]);
-
-    const handlePageChange = (newPage: number) => {
-        setCurrentPage(newPage);
-    };
-
-    const uniqueYears = useMemo(() => {
-        const yearsSet = new Set(
-            courseList
-                .map((course: CourseCodeList) => {
-                    const date = new Date(course.date);
-                    return isNaN(date.getTime())
-                        ? null
-                        : date.getFullYear().toString();
-                })
-                .filter((year) => year !== null)
+    if (loading) {
+        return (
+            <div className="h-[70vh] flex justify-center items-center">
+                <LoaderIcon className="animate-spin h-20 w-20" />
+            </div>
         );
-        return Array.from(yearsSet).sort((a, b) => parseInt(b) - parseInt(a));
-    }, [courseList]);
+    }
+
+    if (courseList.length === 0) {
+        return (
+            <div className="px-4 pt-20 md:pt-40 text-center gap-4">
+                <h1 className="text-9xl font-black text-gray-700 dark:text-gray-200">
+                    404
+                </h1>
+                <p className="text-2xl font-bold tracking-tight dark:text-white text-gray-900 sm:text-4xl">
+                    Uh-oh!
+                </p>
+                <p className="my-4 text-gray-300">
+                    We can&apos;t find that course code
+                </p>
+                <Link href="/">
+                    <Button variant="destructive">Go Back Home</Button>
+                </Link>
+            </div>
+        );
+    }
+
+    const renderDetailsContent = () => (
+        <>
+            <div className="flow-root">
+                <dl className="-my-3 text-left divide-y divide-gray-100 text-base text-black dark:text-white">
+                    {Object.keys(courseData!.details)
+                        .filter((key) => key !== "" && courseData!.details[key] !== "")
+                        .map((key) => {
+                        const detail = courseData!.details[key];
+                        return (
+                            <div
+                                key={key}
+                                className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4"
+                            >
+                                <dt className="font-medium">{key}:</dt>
+                                <dd className="sm:col-span-2">
+                                    {typeof detail === "string"
+                                        ? detail
+                                        : detail?.data &&
+                                          (key === "Authors" ||
+                                              key ===
+                                                  "Appears in Collections" ||
+                                              key === "URI")
+                                        ? detail.data
+                                        : "-"}
+                                </dd>
+                            </div>
+                        );
+                    })}
+                </dl>
+            </div>
+            <div className="grid grid-cols-2 gap-4 mt-4">
+                {courseData!.downloadLinks.map((link, index) => (
+                    <a
+                        key={index}
+                        href={link.fileUrl}
+                        target="_blank"
+                        download
+                        className="block w-full"
+                    >
+                        <Button
+                            className="w-full bg-blue-800 text-white hover:bg-blue-900"
+                            onClick={triggerConfetti}
+                        >
+                            <Download className="mr-2 h-4 w-4" /> Download
+                        </Button>
+                    </a>
+                ))}
+            </div>
+        </>
+    );
 
     return (
         <div className="h-[100vh] px-2.5 md:px-20 mx-auto pb-10 pt-5">
-            <div className="flex flex-col md:flex-row justify-between px-4 md:px-6 mb-4 md:mb-6">
-                <h1 className="order-2 md:order-1 text-2xl md:text-3xl font-thin my-4 ms-5">
+            <div className="flex flex-col md:flex-row justify-between px-4 md:px-6 mb-6">
+                <h1 className="order-2 md:order-1 text-2xl md:text-3xl font-thin my-4">
                     Results for &quot;
                     <strong className="font-extrabold underline underline-offset-8">
                         {decodeURIComponent(courseCode)}
@@ -228,189 +202,105 @@ export default function CoursePage({
                     <SearchBar />
                 </div>
             </div>
-            {loadingCourseList ? (
-                <div className="h-[70vh] flex justify-center items-center">
-                    <LoaderIcon className="animate-spin h-20 w-20" />
-                </div>
-            ) : courseList?.length > 0 ? (
-                <>
-                    {totalPages > 1 && (
-                        <Pagination>
-                            <PaginationContent className="mb-5 gap-4">
-                                {currentPage > 1 && (
-                                    <PaginationItem>
-                                        <PaginationPrevious
-                                            className="bg-black hover:bg-neutral-700"
-                                            onClick={() =>
-                                                handlePageChange(
-                                                    Math.max(currentPage - 1, 1)
-                                                )
-                                            }
-                                        />
-                                    </PaginationItem>
-                                )}
-                                <PaginationItem>
-                                    <PaginationLink className="bg-black text-white dark:bg-white dark:text-black">
-                                        {currentPage}
-                                    </PaginationLink>
-                                </PaginationItem>
-                                {currentPage < totalPages && (
-                                    <PaginationItem>
-                                        <PaginationNext
-                                            className="bg-black hover:bg-neutral-400"
-                                            onClick={() =>
-                                                handlePageChange(
-                                                    Math.min(
-                                                        currentPage + 1,
-                                                        totalPages
-                                                    )
-                                                )
-                                            }
-                                        />
-                                    </PaginationItem>
-                                )}
-                            </PaginationContent>
-                        </Pagination>
-                    )}
-                    <div className="flex justify-end me-5">
-                        <Select
-                            value={selectedYear || "all"}
-                            onValueChange={(value) =>
-                                setSelectedYear(value === "all" ? null : value)
-                            }
-                        >
-                            <SelectTrigger className="w-[180px] bg-neutral-950">
-                                <SelectValue placeholder="Filter by Year" />
-                            </SelectTrigger>
-                            <SelectContent className="bg-neutral-950">
-                                <ScrollArea className="h-[20vh]">
-                                    <SelectItem value="all">
-                                        All Years
-                                    </SelectItem>
-                                    {uniqueYears.map((year) => (
-                                        <SelectItem key={year} value={year}>
-                                            {year}
-                                        </SelectItem>
-                                    ))}
-                                </ScrollArea>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <ScrollArea className="h-[54vh] lg:h-[60vh] 2xl:h-[70vh] p-4">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                            {courseListCards}
-                        </div>
-                    </ScrollArea>
-                </>
-            ) : (
-                <div className="px-4 pt-20 md:pt-40 text-center gap-4">
-                    <h1 className="text-9xl font-black text-gray-700 dark:text-gray-200">
-                        404
-                    </h1>
 
-                    <p className="text-2xl font-bold tracking-tight dark:text-white text-gray-900 sm:text-4xl">
-                        Uh-oh!
-                    </p>
-                    <p className="my-4 text-gray-300">
-                        We can&apos;t find that course code
-                    </p>
-
-                    <Link
-                        href="/"
-                        className="rounded px-5 py-3 text-sm font-medium"
-                    >
-                        <Button variant="destructive">Go Back Home</Button>
-                    </Link>
-                </div>
-            )}
-            {courseData && (
-                <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
-                    <DrawerContent className="md:max-w-3xl mx-2 md:mx-auto bg-black">
-                        <DrawerHeader>
-                            <DrawerTitle className="text-3xl mb-10">
-                                {typeof courseData?.details["Title"] ===
-                                "string"
-                                    ? courseData?.details["Title"]
-                                    : "-"}
-                            </DrawerTitle>
-                            <DrawerDescription>
-                                <div className="flow-root">
-                                    <dl className="-my-3 text-left divide-y divide-gray-100 text-base text-black dark:text-white">
-                                        {Object.keys(courseData.details).map(
-                                            (key) => {
-                                                const detail =
-                                                    courseData.details[key];
-                                                if (key === "" && detail === "")
-                                                    return null;
-                                                return (
-                                                    <div
-                                                        key={key}
-                                                        className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4"
-                                                    >
-                                                        <dt className="font-medium">
-                                                            {key}:
-                                                        </dt>
-                                                        <dd className="sm:col-span-2">
-                                                            {typeof detail ===
-                                                            "string" ? (
-                                                                detail
-                                                            ) : detail?.data &&
-                                                              (key ===
-                                                                  "Authors" ||
-                                                                  key ===
-                                                                      "Appears in Collections" ||
-                                                                  key ===
-                                                                      "URI") ? (
-                                                                <span>
-                                                                    {
-                                                                        detail.data
-                                                                    }
-                                                                </span>
-                                                            ) : (
-                                                                "-"
-                                                            )}
-                                                        </dd>
-                                                    </div>
-                                                );
-                                            }
-                                        )}
-                                    </dl>
-                                </div>
-                            </DrawerDescription>
-                        </DrawerHeader>
-                        <DrawerFooter className="grid grid-cols-2 gap-4">
-                            {courseData?.downloadLinks.map((link, index) => (
-                                <a
-                                    key={index}
-                                    href={link.fileUrl}
-                                    target="_blank"
-                                    download
-                                    className="block w-full"
-                                >
+            <div className="bg-white dark:bg-black rounded-lg border">
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Title</TableHead>
+                            <TableHead>Author</TableHead>
+                            <TableHead>Date</TableHead>
+                            <TableHead className="text-right">
+                                Actions
+                            </TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {courseList.map((course) => (
+                            <TableRow key={course.handle}>
+                                <TableCell className="font-medium">
+                                    {course.title}
+                                </TableCell>
+                                <TableCell>{course.author}</TableCell>
+                                <TableCell>
+                                    {course.date && course.date !== "-"
+                                        ? course.date
+                                        : "N/A"}
+                                </TableCell>
+                                <TableCell className="text-right">
                                     <Button
-                                        key={index}
-                                        className="w-full bg-blue-800 text-white hover:bg-blue-900"
-                                        onClick={() => {
-                                            triggerConfetti();
-                                        }}
+                                        onClick={() => handleViewDetails(course.handle)}
+                                        variant="outline"
+                                        size="sm"
+                                        disabled={!!loadingHandle}
                                     >
-                                        <Download className="mr-2 h-4 w-4" />{" "}
-                                        Download
+                                        {loadingHandle === course.handle ? (
+                                            <LoaderIcon className="animate-spin h-4 w-4" />
+                                        ) : (
+                                            "View"
+                                        )}
                                     </Button>
-                                </a>
-                            ))}
-                            <DrawerClose asChild>
-                                <Button
-                                    variant="destructive"
-                                    className="w-full"
-                                >
-                                    Close
-                                </Button>
-                            </DrawerClose>
-                        </DrawerFooter>
-                    </DrawerContent>
-                </Drawer>
-            )}
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </div>
+
+            {courseData &&
+                (isMobile ? (
+                    <Drawer open={modalOpen} onOpenChange={setModalOpen}>
+                        <DrawerContent className="md:max-w-3xl mx-2 md:mx-auto bg-black">
+                            <DrawerHeader>
+                                <DrawerTitle className="text-3xl mb-4">
+                                    {typeof courseData?.details["Title"] ===
+                                    "string"
+                                        ? courseData?.details["Title"]
+                                        : "-"}
+                                </DrawerTitle>
+                                <DrawerDescription>
+                                    {renderDetailsContent()}
+                                </DrawerDescription>
+                            </DrawerHeader>
+                            <DrawerFooter>
+                                <DrawerClose asChild>
+                                    <Button
+                                        variant="destructive"
+                                        className="w-full"
+                                    >
+                                        Close
+                                    </Button>
+                                </DrawerClose>
+                            </DrawerFooter>
+                        </DrawerContent>
+                    </Drawer>
+                ) : (
+                    <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+                        <DialogContent className="md:max-w-3xl mx-2 md:mx-auto bg-black">
+                            <DialogHeader>
+                                <DialogTitle className="text-3xl mb-4">
+                                    {typeof courseData?.details["Title"] ===
+                                    "string"
+                                        ? courseData?.details["Title"]
+                                        : "-"}
+                                </DialogTitle>
+                                <DialogDescription>
+                                    {renderDetailsContent()}
+                                </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter>
+                                <DialogClose asChild>
+                                    <Button
+                                        variant="destructive"
+                                        className="w-full"
+                                    >
+                                        Close
+                                    </Button>
+                                </DialogClose>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                ))}
         </div>
     );
 }
