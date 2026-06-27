@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { motion, MotionProps } from "motion/react";
+import { motion, MotionProps } from "framer-motion";
 
 interface LineShadowTextProps
   extends Omit<React.HTMLAttributes<HTMLElement>, keyof MotionProps>,
@@ -15,7 +15,8 @@ export function LineShadowText({
   as: Component = "span",
   ...props
 }: LineShadowTextProps) {
-  const MotionComponent = motion.create(Component);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const MotionComponent = motion(Component as any) as any;
   const content = typeof children === "string" ? children : null;
 
   if (!content) {
