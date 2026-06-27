@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	ArrowLeft,
@@ -21,9 +21,9 @@ import { toast } from "sonner";
 export default function CoursePage({
 	params,
 }: {
-	params: { courseCode: string };
+	params: Promise<{ courseCode: string }>;
 }) {
-	const { courseCode } = params;
+	const { courseCode } = use(params);
 	const [courseData, setCourseData] = useState<CourseData | null>(null);
 	const [courseList, setCourseList] = useState<CourseCodeList[]>([]);
 	const [panelOpen, setPanelOpen] = useState(false);
