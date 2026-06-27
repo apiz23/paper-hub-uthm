@@ -5,8 +5,6 @@ import { ThemeProvider } from "@/lib/theme-provider";
 import { Toaster } from "sonner";
 import LibraryToast from "@/components/libToast";
 import { Analytics } from "@vercel/analytics/react";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
 import { SearchHistoryProvider } from "@/components/searchHistoryContext";
 
 const bricolage = Bricolage_Grotesque({
@@ -33,24 +31,21 @@ export default function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body className={`${bricolage.variable} ${figtree.variable}`}>
-				<SidebarProvider>
-					<ThemeProvider
-						attribute="class"
-						defaultTheme="dark"
-						enableSystem
-						disableTransitionOnChange
-					>
-						<SearchHistoryProvider>
-							<AppSidebar />
-							<div className="bg-background w-full min-h-dvh overflow-x-hidden">
-								<LibraryToast />
-								<Toaster richColors position="bottom-right" />
-								{children}
-							</div>
-							<Analytics />
-						</SearchHistoryProvider>
-					</ThemeProvider>
-				</SidebarProvider>
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="dark"
+					enableSystem
+					disableTransitionOnChange
+				>
+					<SearchHistoryProvider>
+						<div className="bg-background min-h-dvh">
+							<LibraryToast />
+							<Toaster richColors position="bottom-right" />
+							{children}
+						</div>
+						<Analytics />
+					</SearchHistoryProvider>
+				</ThemeProvider>
 			</body>
 		</html>
 	);
