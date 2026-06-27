@@ -189,7 +189,7 @@ export default function CoursePage({
     );
 
     return (
-        <div className="h-[100vh] px-2.5 md:px-20 mx-auto pb-10 pt-5">
+        <div className="min-h-screen px-2.5 md:px-20 mx-auto pb-10 pt-5">
             <div className="flex flex-col md:flex-row justify-between px-4 md:px-6 mb-6">
                 <h1 className="order-2 md:order-1 text-2xl md:text-3xl font-thin my-4">
                     Results for &quot;

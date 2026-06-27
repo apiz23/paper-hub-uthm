@@ -14,56 +14,58 @@ import { SearchHistoryProvider } from "@/components/searchHistoryContext";
 const poppins = Poppins({ subsets: ["latin"], weight: ["500"] });
 
 export const metadata: Metadata = {
-	title: "UTHM Paper Hub",
-	description: "UTHM Exam Paper Finder",
-	icons: {
-		icon: "/favicon.ico",
-		href: "",
-	},
+    title: "UTHM Paper Hub",
+    description: "UTHM Exam Paper Finder",
+    icons: {
+        icon: "/favicon.ico",
+        href: "",
+    },
 };
 
 export default function RootLayout({
-	children,
+    children,
 }: Readonly<{
-	children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-	return (
-		<html lang="en">
-			<body className={poppins.className}>
-				<SidebarProvider>
-					<ThemeProvider
-						attribute="class"
-						defaultTheme="dark"
-						enableSystem
-						disableTransitionOnChange
-					>
-						<SearchHistoryProvider>
-							<AppSidebar />
-							<div className="bg-black w-full h-screen overflow-hidden">
-								<LibraryToast />
-								<Toaster richColors position="bottom-right" />
-								{/* <Navbar /> */}
-								<SidebarTrigger className="m-2" />
+    return (
+        <html lang="en" suppressHydrationWarning>
+            <body className={poppins.className}>
+                <SidebarProvider>
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="dark"
+                        enableSystem
+                        disableTransitionOnChange
+                    >
+                        <SearchHistoryProvider>
+                            <AppSidebar />
+                            <div className="bg-black w-full min-h-screen overflow-x-hidden">
+                                <LibraryToast />
+                                <Toaster richColors position="bottom-right" />
+                                {/* <Navbar /> */}
+                                <SidebarTrigger className="m-2" />
 
-								<div className="relative">
-									<DotPattern
-										width={15}
-										height={15}
-										cx={1}
-										cy={1}
-										cr={1}
-										className={cn(
-											"absolute inset-0 z-0 [mask-image:radial-gradient(200px_circle_at_center,white,transparent)] md:[mask-image:radial-gradient(300px_circle_at_center,white,transparent)]"
-										)}
-									/>
-									<div className="relative z-10">{children}</div>
-								</div>
-							</div>
-							<Analytics />
-						</SearchHistoryProvider>
-					</ThemeProvider>
-				</SidebarProvider>
-			</body>
-		</html>
-	);
+                                <div className="relative">
+                                    <DotPattern
+                                        width={15}
+                                        height={15}
+                                        cx={1}
+                                        cy={1}
+                                        cr={1}
+                                        className={cn(
+                                            "absolute inset-0 z-0 [mask-image:radial-gradient(200px_circle_at_center,white,transparent)] md:[mask-image:radial-gradient(300px_circle_at_center,white,transparent)]"
+                                        )}
+                                    />
+                                    <div className="relative z-10">
+                                        {children}
+                                    </div>
+                                </div>
+                            </div>
+                            <Analytics />
+                        </SearchHistoryProvider>
+                    </ThemeProvider>
+                </SidebarProvider>
+            </body>
+        </html>
+    );
 }
