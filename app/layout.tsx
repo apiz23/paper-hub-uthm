@@ -30,7 +30,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<body className={`${bricolage.variable} ${figtree.variable}`}>
+			<body className={`${bricolage.variable} ${figtree.variable}`} suppressHydrationWarning>
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="dark"

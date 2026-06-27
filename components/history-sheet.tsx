@@ -13,10 +13,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { useSearchHistory } from "./searchHistoryContext";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
 export function HistorySheet() {
 	const { searchHistory, clearSearchHistory } = useSearchHistory();
 	const router = useRouter();
+	const [mounted, setMounted] = useState(false);
+	useEffect(() => setMounted(true), []);
 
 	return (
 		<Sheet>
@@ -28,7 +31,7 @@ export function HistorySheet() {
 					aria-label="Search history"
 				>
 					<Clock className="h-4 w-4" />
-					{searchHistory.length > 0 && (
+					{mounted && searchHistory.length > 0 && (
 						<span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-primary" />
 					)}
 				</Button>
