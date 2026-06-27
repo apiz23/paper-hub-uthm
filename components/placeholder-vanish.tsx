@@ -180,14 +180,14 @@ export function PlaceholdersAndVanishInput({
 	return (
 		<form
 			className={cn(
-				"w-full relative max-w-xl mx-auto bg-white dark:bg-zinc-800 h-12 rounded-2xl overflow-hidden shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),_0px_1px_0px_0px_rgba(25,28,33,0.02),_0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-200",
-				value && "bg-gray-50"
+				"w-full relative max-w-xl mx-auto bg-background border border-border h-12 rounded-sm overflow-hidden transition duration-200",
+				value && "border-primary/60"
 			)}
 			onSubmit={handleSubmit}
 		>
 			<canvas
 				className={cn(
-					"absolute pointer-events-none  text-base transform scale-50 top-[20%] left-2 sm:left-8 origin-top-left filter invert dark:invert-0 pr-20",
+					"absolute pointer-events-none text-base transform scale-50 top-[20%] left-2 sm:left-8 origin-top-left filter invert dark:invert-0 pr-20",
 					!animating ? "opacity-0" : "opacity-100"
 				)}
 				ref={canvasRef}
@@ -204,15 +204,15 @@ export function PlaceholdersAndVanishInput({
 				value={value}
 				type="text"
 				className={cn(
-					"w-full relative text-sm sm:text-base z-50 border-none dark:text-white bg-transparent text-black h-full rounded-full focus:outline-none focus:ring-0 pl-4 sm:pl-10 pr-20",
-					animating && "text-transparent dark:text-transparent"
+					"w-full relative text-sm sm:text-base z-50 border-none bg-transparent text-foreground h-full focus:outline-none focus:ring-0 pl-4 sm:pl-10 pr-20 font-body",
+					animating && "text-transparent"
 				)}
 			/>
 
 			<button
 				disabled={!value}
 				type="submit"
-				className="absolute right-2 top-1/2 z-50 -translate-y-1/2 h-8 w-8 rounded-full disabled:bg-gray-100 bg-black dark:bg-zinc-900 dark:disabled:bg-zinc-800 transition duration-200 flex items-center justify-center"
+				className="absolute right-2 top-1/2 z-50 -translate-y-1/2 h-8 w-8 rounded-sm disabled:opacity-40 bg-foreground transition duration-200 flex items-center justify-center"
 			>
 				<motion.svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -224,7 +224,7 @@ export function PlaceholdersAndVanishInput({
 					strokeWidth="2"
 					strokeLinecap="round"
 					strokeLinejoin="round"
-					className="text-gray-300 h-4 w-4"
+					className="text-background h-4 w-4"
 				>
 					<path stroke="none" d="M0 0h24v24H0z" fill="none" />
 					<motion.path
@@ -267,7 +267,7 @@ export function PlaceholdersAndVanishInput({
 								duration: 0.3,
 								ease: "linear",
 							}}
-							className="dark:text-zinc-500 text-sm sm:text-base font-normal text-neutral-500 pl-4 sm:pl-12 text-left w-[calc(100%-2rem)] truncate"
+							className="text-sm sm:text-base font-normal text-muted-foreground pl-4 sm:pl-12 text-left w-[calc(100%-2rem)] truncate font-body"
 						>
 							{placeholders[currentPlaceholder]}
 						</motion.p>

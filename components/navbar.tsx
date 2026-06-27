@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Dock, DockIcon } from "./magicui/dock";
-import { Github, Home, Info, Linkedin } from "lucide-react";
+import { Code2, Home, Info, Briefcase } from "lucide-react";
 import {
 	Tooltip,
 	TooltipContent,
@@ -42,12 +42,12 @@ export default function Navbar() {
 			href: "https://library.uthm.edu.my/",
 		},
 		{
-			icon: <Github className="w-5 h-5" />,
+			icon: <Code2 className="w-5 h-5" />,
 			label: "GitHub Apiz23",
 			href: "https://github.com/apiz23",
 		},
 		{
-			icon: <Linkedin className="w-5 h-5" />,
+			icon: <Briefcase className="w-5 h-5" />,
 			label: "LinkedIn Me",
 			href: "https://www.linkedin.com/in/muh-hafizuddin/",
 		},

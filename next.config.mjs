@@ -2,15 +2,16 @@
 
 const nextConfig = {
 	images: {
-		domains: ["upload.wikimedia.org", "www.uthm.edu.my"],
-	},
-	async rewrites() {
-		return [
+		remotePatterns: [
 			{
-				source: "/api/:path*",
-				destination: "https://jg160007-api.vercel.app/:path*",
+				protocol: "https",
+				hostname: "upload.wikimedia.org",
 			},
-		];
+			{
+				protocol: "https",
+				hostname: "www.uthm.edu.my",
+			},
+		],
 	},
 };
 
