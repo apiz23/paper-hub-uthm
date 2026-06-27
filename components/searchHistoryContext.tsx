@@ -26,7 +26,8 @@ export function SearchHistoryProvider({
 	});
 
 	const addSearchTerm = (term: string) => {
-		const updatedHistory = [term, ...searchHistory];
+		const filtered = searchHistory.filter((t) => t !== term);
+		const updatedHistory = [term, ...filtered].slice(0, 20);
 		setSearchHistory(updatedHistory);
 		localStorage.setItem("searchHistory", JSON.stringify(updatedHistory));
 	};
