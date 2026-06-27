@@ -14,9 +14,34 @@ export default function Home() {
 	const router = useRouter();
 
 	return (
-		<div className="min-h-dvh flex flex-col">
-			{/* Header */}
-			<header className="flex items-center justify-between px-5 h-14 border-b border-border/60">
+		<div className="min-h-dvh flex flex-col relative overflow-hidden">
+
+			{/* ── Background layers ── */}
+			<div className="absolute inset-0 pointer-events-none select-none" aria-hidden="true">
+				{/* Dot grid */}
+				<div
+					className="absolute inset-0"
+					style={{
+						backgroundImage:
+							"radial-gradient(circle, hsl(var(--muted-foreground) / 0.18) 1px, transparent 1px)",
+						backgroundSize: "24px 24px",
+					}}
+				/>
+				{/* Amber radial glow — sits behind the hero search area */}
+				<div
+					className="absolute inset-0"
+					style={{
+						background:
+							"radial-gradient(ellipse 65% 55% at 50% 62%, hsl(var(--primary) / 0.11) 0%, transparent 72%)",
+					}}
+				/>
+				{/* Edge vignettes so the grid doesn't clash with header/footer */}
+				<div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-background to-transparent" />
+				<div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-background to-transparent" />
+			</div>
+
+			{/* ── Header ── */}
+			<header className="relative z-10 flex items-center justify-between px-5 h-14 border-b border-border/60 bg-background/70 backdrop-blur-md">
 				<Link href="/" className="font-display font-700 text-sm text-foreground">
 					Paper Hub <span className="text-primary">UTHM</span>
 				</Link>
@@ -32,12 +57,12 @@ export default function Home() {
 				</nav>
 			</header>
 
-			{/* Hero */}
-			<main className="flex-1 flex flex-col items-center justify-center px-6 pb-28 pt-8">
+			{/* ── Hero ── */}
+			<main className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 pb-28 pt-8">
 				<div className="w-full max-w-xl space-y-12">
 					{/* Brand */}
-					<div className="space-y-2">
-						<h1 className="font-display font-800 tracking-tight leading-[0.9]">
+					<div className="space-y-3">
+						<h1 className="font-display font-800 tracking-tight leading-[0.88]">
 							<span className="block text-6xl sm:text-7xl md:text-8xl text-foreground">
 								Paper Hub
 							</span>
@@ -45,7 +70,7 @@ export default function Home() {
 								UTHM
 							</span>
 						</h1>
-						<p className="font-body text-xs text-muted-foreground tracking-[0.25em] uppercase ml-0.5">
+						<p className="font-body text-xs text-muted-foreground tracking-[0.28em] uppercase ml-0.5">
 							past exam papers, fast
 						</p>
 					</div>
@@ -55,13 +80,16 @@ export default function Home() {
 
 					{/* Example codes */}
 					<div className="flex flex-wrap gap-2">
+						<span className="font-body text-[10px] text-muted-foreground/60 uppercase tracking-widest self-center mr-1">
+							Try
+						</span>
 						{EXAMPLE_CODES.map((code) => (
 							<button
 								key={code}
 								onClick={() =>
 									router.push(`/courses/${encodeURIComponent(code)}`)
 								}
-								className="font-body text-xs text-muted-foreground border border-border px-3 py-1.5 hover:border-primary hover:text-primary transition-colors duration-150 rounded-sm"
+								className="font-body text-xs text-muted-foreground border border-border/80 px-3 py-1.5 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-150 rounded-sm"
 							>
 								{code}
 							</button>
@@ -70,8 +98,8 @@ export default function Home() {
 				</div>
 			</main>
 
-			{/* Footer */}
-			<footer className="flex items-center justify-center px-6 py-4 border-t border-border/60">
+			{/* ── Footer ── */}
+			<footer className="relative z-10 flex items-center justify-center px-6 py-4 border-t border-border/60">
 				<p className="font-body text-xs text-muted-foreground">
 					Data from{" "}
 					<a

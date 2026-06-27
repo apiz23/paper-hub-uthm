@@ -83,7 +83,15 @@ export default function CoursePage({
 	// ── Loading ────────────────────────────────────────────────────────────────
 	if (loading) {
 		return (
-			<div className="min-h-dvh flex flex-col">
+			<div className="min-h-dvh flex flex-col relative">
+				<div
+					className="fixed inset-0 pointer-events-none select-none opacity-50"
+					aria-hidden="true"
+					style={{
+						backgroundImage: "radial-gradient(circle, hsl(var(--muted-foreground) / 0.10) 1px, transparent 1px)",
+						backgroundSize: "24px 24px",
+					}}
+				/>
 				<PageHeader courseCode={courseCode} />
 				<div className="flex-1 max-w-3xl mx-auto w-full px-5 py-8">
 					<Skeleton className="h-3 w-36 mb-8" />
@@ -105,7 +113,15 @@ export default function CoursePage({
 	// ── Empty ──────────────────────────────────────────────────────────────────
 	if (courseList.length === 0) {
 		return (
-			<div className="min-h-dvh flex flex-col">
+			<div className="min-h-dvh flex flex-col relative">
+				<div
+					className="fixed inset-0 pointer-events-none select-none opacity-50"
+					aria-hidden="true"
+					style={{
+						backgroundImage: "radial-gradient(circle, hsl(var(--muted-foreground) / 0.10) 1px, transparent 1px)",
+						backgroundSize: "24px 24px",
+					}}
+				/>
 				<PageHeader courseCode={courseCode} />
 				<div className="flex-1 flex flex-col items-center justify-center gap-3 px-6 text-center pb-32">
 					<span className="font-display text-[8rem] font-800 leading-none text-muted-foreground/10 select-none">
@@ -131,7 +147,17 @@ export default function CoursePage({
 
 	// ── Results ────────────────────────────────────────────────────────────────
 	return (
-		<div className="min-h-dvh flex flex-col">
+		<div className="min-h-dvh flex flex-col relative">
+			{/* Subtle grid texture */}
+			<div
+				className="fixed inset-0 pointer-events-none select-none opacity-50"
+				aria-hidden="true"
+				style={{
+					backgroundImage:
+						"radial-gradient(circle, hsl(var(--muted-foreground) / 0.10) 1px, transparent 1px)",
+					backgroundSize: "24px 24px",
+				}}
+			/>
 			<PageHeader courseCode={courseCode} />
 
 			<div className="flex-1 max-w-3xl mx-auto w-full px-5 py-8">
@@ -302,7 +328,7 @@ export default function CoursePage({
 
 function PageHeader({ courseCode }: { courseCode: string }) {
 	return (
-		<header className="sticky top-0 z-30 flex items-center gap-3 px-4 h-14 border-b border-border/60 bg-background">
+		<header className="sticky top-0 z-30 flex items-center gap-3 px-4 h-14 border-b border-border/60 bg-background/80 backdrop-blur-md">
 			<Button variant="ghost" size="icon" className="shrink-0 -ml-1" asChild>
 				<Link href="/" aria-label="Home">
 					<ArrowLeft className="h-4 w-4" />
