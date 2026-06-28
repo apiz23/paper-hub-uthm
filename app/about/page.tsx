@@ -1,175 +1,212 @@
 "use client";
 
-import BlurIn from "@/components/magicui/blur-in";
-import HyperText from "@/components/magicui/hyper-text";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { RiNextjsFill } from "react-icons/ri";
-import { SiTailwindcss, SiTypescript } from "react-icons/si";
-import React, { useRef } from "react";
-import { AnimatedBeam } from "@/components/magicui/animated-beam";
-import { Library, ServerIcon, User } from "lucide-react";
-import Circle from "@/components/circleComp";
-import Safari from "@/components/magicui/safari";
-import Iphone15Pro from "@/components/magicui/iphone-15-pro";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ModeToggle } from "@/components/theme-btn";
+import { HistorySheet } from "@/components/history-sheet";
+
+const STACK = [
+	{ name: "Next.js 15", role: "App Router, API routes, server-side rendering" },
+	{ name: "TypeScript", role: "Type-safe throughout" },
+	{ name: "Tailwind CSS v4", role: "Utility-first styling" },
+	{ name: "Cheerio", role: "HTML parsing of library responses" },
+	{ name: "shadcn/ui", role: "Accessible component primitives" },
+	{ name: "Vercel", role: "Hosting and edge deployment" },
+];
+
+const FLOW = [
+	{ label: "You search", sub: "course code or name" },
+	{ label: "API fetches", sub: "UTHM digital library" },
+	{ label: "Papers returned", sub: "sorted by year" },
+];
 
 export default function About() {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const div1Ref = useRef<HTMLDivElement>(null);
-    const div2Ref = useRef<HTMLDivElement>(null);
-    const div3Ref = useRef<HTMLDivElement>(null);
+	return (
+		<div className="min-h-dvh flex flex-col relative overflow-hidden">
+			{/* Background */}
+			<div
+				className="absolute inset-0 pointer-events-none select-none"
+				aria-hidden="true"
+			>
+				<div
+					className="absolute inset-0"
+					style={{
+						backgroundImage:
+							"radial-gradient(circle, hsl(var(--muted-foreground) / 0.14) 1px, transparent 1px)",
+						backgroundSize: "24px 24px",
+					}}
+				/>
+				<div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-background to-transparent" />
+				<div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-background to-transparent" />
+			</div>
 
-    return (
-        <>
-            <section className="min-h-screen p-4">
-                <ScrollArea className="rounded-lg h-[90vh] w-full">
-                    <div className="max-w-xl md:max-w-4xl mx-auto px-2 space-y-28">
-                        {/* Hero Section */}
-                        <div className="text-center mt-20">
-                            <HyperText
-                                className="text-4xl text-center md:text-7xl font-bold text-black dark:text-white"
-                                text="About Paper Hub"
-                                duration={100}
-                            />
-                            <BlurIn
-                                word="An unofficial, open-source platform to easily access UTHM's past year papers."
-                                className="text-lg md:text-xl font-bold text-neutral-600 dark:text-neutral-400 mt-4"
-                            />
-                        </div>
+			{/* Header */}
+			<header className="sticky top-0 z-30 flex items-center gap-2 px-4 h-14 border-b border-border/60 bg-background/80 backdrop-blur-md">
+				<Button variant="ghost" size="icon" className="shrink-0 -ml-1" asChild>
+					<Link href="/" aria-label="Home">
+						<ArrowLeft className="h-4 w-4" />
+					</Link>
+				</Button>
+				<span className="font-display font-700 text-sm text-foreground mr-auto tracking-tight">
+					Paper Hub <span className="text-primary">UTHM</span>
+				</span>
+				<HistorySheet />
+				<ModeToggle />
+			</header>
 
-                        {/* Tech Stack */}
-                        <div className="space-y-10">
-                            <BlurIn
-                                word="What Tech Powers This?"
-                                className="text-3xl md:text-5xl text-center font-bold text-black dark:text-white"
-                            />
-                            <p className="max-w-2xl text-center mx-auto text-neutral-600 dark:text-neutral-400">
-                                Paper Hub is built with a modern, robust tech
-                                stack to ensure a fast, reliable, and seamless
-                                experience for finding the exam papers you need.
-                            </p>
-                            <div className="flex justify-center gap-6 md:gap-10">
-                                <Badge
-                                    variant="outline"
-                                    className="rounded-xl bg-neutral-100 dark:bg-neutral-800 p-4 border-black/10 dark:border-white/10"
-                                >
-                                    <RiNextjsFill className="h-10 md:h-16 w-10 md:w-16 text-black dark:text-white" />
-                                </Badge>
-                                <Badge
-                                    variant="outline"
-                                    className="rounded-xl bg-neutral-100 dark:bg-neutral-800 p-4 border-black/10 dark:border-white/10"
-                                >
-                                    <SiTypescript className="h-10 md:h-16 w-10 md:w-16 text-blue-500" />
-                                </Badge>
-                                <Badge
-                                    variant="outline"
-                                    className="rounded-xl bg-neutral-100 dark:bg-neutral-800 p-4 border-black/10 dark:border-white/10"
-                                >
-                                    <SiTailwindcss className="h-10 md:h-16 w-10 md:w-16 text-cyan-400" />
-                                </Badge>
-                            </div>
-                        </div>
+			{/* Main content */}
+			<main className="relative z-10 flex-1 w-full px-6 pt-16 pb-28">
+				{/* Hero */}
+				<div className="mb-20">
+					<p className="font-body text-[10px] text-primary uppercase tracking-[0.28em] mb-5">
+						About
+					</p>
+					<h1 className="font-display font-800 text-5xl sm:text-6xl leading-[0.92] tracking-tight text-foreground mb-8">
+						Past papers,
+						<br />
+						<span className="text-primary">without the friction.</span>
+					</h1>
+					<p className="font-body text-base text-muted-foreground leading-relaxed max-w-[46ch]">
+						Paper Hub UTHM is an unofficial, open-source tool built for students who
+						need fast access to past exam papers — no login, no forms, no waiting.
+					</p>
+				</div>
 
-                        {/* Architecture */}
-                        <div className="space-y-6">
-                            <BlurIn
-                                word="The Architecture"
-                                className="text-3xl md:text-5xl text-center font-bold text-black dark:text-white"
-                            />
-                            <div
-                                className="relative mx-auto max-w-2xl flex items-center justify-center md:p-0 p-10"
-                                ref={containerRef}
-                            >
-                                <div className="flex h-full w-full flex-col items-stretch justify-between gap-10">
-                                    <div className="flex flex-row justify-between">
-                                        <Circle ref={div1Ref}>
-                                            <User className="text-black size-7" />
-                                        </Circle>
-                                        <Circle ref={div2Ref}>
-                                            <ServerIcon className="text-black size-7" />
-                                        </Circle>
-                                        <Circle ref={div3Ref}>
-                                            <Library className="text-black size-7" />
-                                        </Circle>
-                                    </div>
-                                </div>
-                                <AnimatedBeam
-                                    containerRef={containerRef}
-                                    fromRef={div1Ref}
-                                    toRef={div2Ref}
-                                    startYOffset={10}
-                                    endYOffset={10}
-                                    curvature={-20}
-                                />
-                                <AnimatedBeam
-                                    containerRef={containerRef}
-                                    fromRef={div2Ref}
-                                    toRef={div3Ref}
-                                    startYOffset={10}
-                                    endYOffset={10}
-                                    curvature={-20}
-                                />
-                                <AnimatedBeam
-                                    containerRef={containerRef}
-                                    fromRef={div3Ref}
-                                    toRef={div2Ref}
-                                    startYOffset={-10}
-                                    endYOffset={-10}
-                                    curvature={20}
-                                    reverse
-                                />
-                                <AnimatedBeam
-                                    containerRef={containerRef}
-                                    fromRef={div2Ref}
-                                    toRef={div1Ref}
-                                    startYOffset={-10}
-                                    endYOffset={-10}
-                                    curvature={20}
-                                    reverse
-                                />
-                            </div>
-                            <div className="flex justify-between max-w-2xl mx-auto px-5 text-center font-semibold text-neutral-700 dark:text-neutral-300">
-                                <p className="w-1/3">Your Browser</p>
-                                <p className="w-1/3">Next.js API</p>
-                                <p className="w-1/3">UTHM Library</p>
-                            </div>
-                            <p className="max-w-2xl text-center mx-auto text-neutral-600 dark:text-neutral-400 pt-4">
-                                When you search for a paper, your request is
-                                sent to our Next.js backend. The backend then
-                                fetches data from the UTHM digital library,
-                                processes it, and sends it back to you.
-                            </p>
-                        </div>
+				{/* Numbered sections */}
+				<div className="space-y-0">
+					{/* 01 — Why */}
+					<section className="grid grid-cols-[2.5rem_1fr] gap-5 py-10 border-t border-border/40">
+						<div className="pt-0.5">
+							<span className="font-display tabular-nums text-3xl font-800 text-muted-foreground/15 leading-none select-none">
+								01
+							</span>
+						</div>
+						<div className="space-y-3">
+							<h2 className="font-display font-700 text-base text-foreground">
+								Why it exists
+							</h2>
+							<p className="font-body text-sm text-muted-foreground leading-relaxed max-w-[52ch]">
+								UTHM's library portal wasn't built for speed. Students needed to
+								navigate multiple pages just to find a single paper. Paper Hub cuts that
+								to a single search — type a course code or name and get results
+								immediately.
+							</p>
+						</div>
+					</section>
 
-                        {/* Responsive Design */}
-                        <div className="space-y-10 pb-20">
-                            <BlurIn
-                                className="text-3xl md:text-5xl font-bold text-black dark:text-white text-center"
-                                word="Accessible Anywhere"
-                            />
-                            <div className="px-2">
-                                <Safari
-                                    url="https://paper-hub-uthm.vercel.app/"
-                                    className="size-full"
-                                    src="/UI1.png"
-                                />
-                                <p className="text-center w-full text-2xl font-semibold my-5">
-                                    Desktop
-                                </p>
-                            </div>
-                            <div className="px-2">
-                                <Iphone15Pro
-                                    className="size-1/2 md:size-1/3 mx-auto"
-                                    src="/UI2.png"
-                                />
-                                <p className="text-center w-full text-2xl font-semibold my-5">
-                                    Mobile
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </ScrollArea>
-            </section>
-        </>
-    );
+					{/* 02 — How */}
+					<section className="grid grid-cols-[2.5rem_1fr] gap-5 py-10 border-t border-border/40">
+						<div className="pt-0.5">
+							<span className="font-display tabular-nums text-3xl font-800 text-muted-foreground/15 leading-none select-none">
+								02
+							</span>
+						</div>
+						<div className="space-y-4">
+							<h2 className="font-display font-700 text-base text-foreground">
+								How it works
+							</h2>
+							<p className="font-body text-sm text-muted-foreground leading-relaxed max-w-[52ch]">
+								No database, no stored copies. Every search hits a Next.js API route
+								which queries the UTHM Digital Collection in real time, parses the HTML,
+								and returns structured data. The library stays the source of truth.
+							</p>
+
+							{/* Flow diagram */}
+							<div className="flex items-stretch gap-2 pt-2">
+								{FLOW.map((step, i) => (
+									<div key={step.label} className="flex items-center gap-2 flex-1">
+										<div className="flex-1 py-3 px-3 bg-muted/25 rounded-sm border border-border/50">
+											<p className="font-display font-600 text-xs text-foreground leading-snug">
+												{step.label}
+											</p>
+											<p className="font-body text-[10px] text-muted-foreground mt-0.5 leading-snug">
+												{step.sub}
+											</p>
+										</div>
+										{i < FLOW.length - 1 && (
+											<span className="font-body text-muted-foreground/30 text-sm shrink-0">
+												→
+											</span>
+										)}
+									</div>
+								))}
+							</div>
+						</div>
+					</section>
+
+					{/* 03 — Stack */}
+					<section className="grid grid-cols-[2.5rem_1fr] gap-5 py-10 border-t border-border/40">
+						<div className="pt-0.5">
+							<span className="font-display tabular-nums text-3xl font-800 text-muted-foreground/15 leading-none select-none">
+								03
+							</span>
+						</div>
+						<div className="space-y-4">
+							<h2 className="font-display font-700 text-base text-foreground">
+								The stack
+							</h2>
+							<p className="font-body text-sm text-muted-foreground leading-relaxed max-w-[52ch]">
+								Deliberately lean. No auth layer, no backend server, no external
+								database — just a Next.js app on Vercel.
+							</p>
+							<div className="pt-1">
+								{STACK.map((item) => (
+									<div
+										key={item.name}
+										className="flex items-baseline gap-4 py-2.5 border-b border-border/30 last:border-0"
+									>
+										<span className="font-display font-600 text-sm text-foreground w-32 shrink-0">
+											{item.name}
+										</span>
+										<span className="font-body text-xs text-muted-foreground">
+											{item.role}
+										</span>
+									</div>
+								))}
+							</div>
+						</div>
+					</section>
+
+					{/* 04 — Disclaimer */}
+					<section className="grid grid-cols-[2.5rem_1fr] gap-5 py-10 border-t border-border/40">
+						<div className="pt-0.5">
+							<span className="font-display tabular-nums text-3xl font-800 text-muted-foreground/15 leading-none select-none">
+								04
+							</span>
+						</div>
+						<div className="space-y-3">
+							<h2 className="font-display font-700 text-base text-foreground">
+								Disclaimer
+							</h2>
+							<p className="font-body text-sm text-muted-foreground leading-relaxed max-w-[52ch]">
+								Paper Hub is a student project, independent of and not affiliated with
+								UTHM. All content is sourced from{" "}
+								<a
+									href="http://digitalcollection.uthm.edu.my"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="text-primary underline underline-offset-4 hover:text-primary/80 transition-colors"
+								>
+									digitalcollection.uthm.edu.my
+								</a>{" "}
+								and intended for academic use only. If you have concerns about content,
+								please reach out.
+							</p>
+						</div>
+					</section>
+				</div>
+
+				{/* Back CTA */}
+				<div className="pt-10 border-t border-border/40">
+					<Button variant="outline" size="sm" asChild className="font-body">
+						<Link href="/">
+							<ArrowLeft className="h-3.5 w-3.5 mr-1.5" />
+							Back to search
+						</Link>
+					</Button>
+				</div>
+			</main>
+		</div>
+	);
 }

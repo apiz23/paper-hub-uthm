@@ -12,7 +12,7 @@ import { CourseCodeList, CourseData } from "@/lib/interface/interface";
 import Link from "next/link";
 import { fetchCourseDetails, fetchCourseList } from "@/lib/api/courseApi";
 import confetti from "canvas-confetti";
-import { SearchBar } from "@/components/placeholder-vanish";
+import { SearchCommand } from "@/components/search-command";
 import { ModeToggle } from "@/components/theme-btn";
 import { HistorySheet } from "@/components/history-sheet";
 import { toast } from "sonner";
@@ -93,7 +93,7 @@ export default function CoursePage({
 					}}
 				/>
 				<PageHeader courseCode={courseCode} />
-				<div className="flex-1 max-w-3xl mx-auto w-full px-5 py-8">
+				<div className="flex-1 w-full px-5 py-8">
 					<Skeleton className="h-3 w-36 mb-8" />
 					{Array.from({ length: 7 }).map((_, i) => (
 						<div key={i} className="flex items-start gap-5 py-5 border-b border-border/60">
@@ -160,7 +160,7 @@ export default function CoursePage({
 			/>
 			<PageHeader courseCode={courseCode} />
 
-			<div className="flex-1 max-w-3xl mx-auto w-full px-5 py-8">
+			<div className="flex-1 w-full px-5 py-8">
 				{/* Count */}
 				<p className="font-body text-xs text-muted-foreground mb-6 uppercase tracking-[0.18em]">
 					{courseList.length} paper{courseList.length !== 1 ? "s" : ""} ·{" "}
@@ -328,24 +328,19 @@ export default function CoursePage({
 
 function PageHeader({ courseCode }: { courseCode: string }) {
 	return (
-		<header className="sticky top-0 z-30 flex items-center gap-3 px-4 h-14 border-b border-border/60 bg-background/80 backdrop-blur-md">
+		<header className="sticky top-0 z-30 flex items-center gap-2 px-4 h-14 border-b border-border/60 bg-background/80 backdrop-blur-md">
 			<Button variant="ghost" size="icon" className="shrink-0 -ml-1" asChild>
 				<Link href="/" aria-label="Home">
 					<ArrowLeft className="h-4 w-4" />
 				</Link>
 			</Button>
 
-			<div className="flex items-center gap-2 mr-auto">
-				<span className="font-display font-700 text-sm text-foreground tracking-tight">
-					<span className="text-muted-foreground hidden sm:inline">Paper Hub · </span>
-					{decodeURIComponent(courseCode)}
-				</span>
-			</div>
+			<span className="font-display font-700 text-sm text-foreground tracking-tight mr-auto">
+				<span className="text-muted-foreground hidden sm:inline">Paper Hub · </span>
+				{decodeURIComponent(courseCode)}
+			</span>
 
-			<div className="max-w-[200px] sm:max-w-xs w-full">
-				<SearchBar />
-			</div>
-
+			<SearchCommand />
 			<HistorySheet />
 			<ModeToggle />
 		</header>

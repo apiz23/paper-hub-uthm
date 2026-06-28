@@ -15,9 +15,11 @@ export default function Home() {
 
 	return (
 		<div className="min-h-dvh flex flex-col relative overflow-hidden">
-
 			{/* ── Background layers ── */}
-			<div className="absolute inset-0 pointer-events-none select-none" aria-hidden="true">
+			<div
+				className="absolute inset-0 pointer-events-none select-none"
+				aria-hidden="true"
+			>
 				{/* Dot grid */}
 				<div
 					className="absolute inset-0"
@@ -41,7 +43,7 @@ export default function Home() {
 			</div>
 
 			{/* ── Header ── */}
-			<header className="relative z-10 flex items-center justify-between px-5 h-14 border-b border-border/60 bg-background/70 backdrop-blur-md">
+			<header className="relative z-10 flex items-center justify-between px-6 h-14 border-b border-border/60 bg-background/70 backdrop-blur-md">
 				<Link href="/" className="font-display font-700 text-sm text-foreground">
 					Paper Hub <span className="text-primary">UTHM</span>
 				</Link>
@@ -59,7 +61,7 @@ export default function Home() {
 
 			{/* ── Hero ── */}
 			<main className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 pb-28 pt-8">
-				<div className="w-full max-w-xl space-y-12">
+				<div className="w-full max-w-2xl space-y-12">
 					{/* Brand */}
 					<div className="space-y-3">
 						<h1 className="font-display font-800 tracking-tight leading-[0.88]">
@@ -86,9 +88,7 @@ export default function Home() {
 						{EXAMPLE_CODES.map((code) => (
 							<button
 								key={code}
-								onClick={() =>
-									router.push(`/courses/${encodeURIComponent(code)}`)
-								}
+								onClick={() => router.push(`/courses/${encodeURIComponent(code)}`)}
 								className="font-body text-xs text-muted-foreground border border-border/80 px-3 py-1.5 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-150 rounded-sm"
 							>
 								{code}

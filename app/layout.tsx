@@ -41,7 +41,9 @@ export default function RootLayout({
 						<div className="bg-background min-h-dvh">
 							<LibraryToast />
 							<Toaster richColors position="bottom-right" />
-							{children}
+							<div className="max-w-4xl mx-auto min-h-dvh">
+								{children}
+							</div>
 						</div>
 						<Analytics />
 					</SearchHistoryProvider>
