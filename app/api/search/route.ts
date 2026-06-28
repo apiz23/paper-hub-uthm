@@ -2,17 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import * as cheerio from "cheerio";
 
 const UTHM_BASE = "http://digitalcollection.uthm.edu.my";
+const PROXY = process.env.UTHM_PROXY_URL;
 
-const BROWSER_HEADERS = {
-  "User-Agent":
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-  Accept:
-    "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-  "Accept-Language": "en-US,en;q=0.5",
-  "Accept-Encoding": "gzip, deflate",
-  Connection: "keep-alive",
-  Referer: UTHM_BASE,
-};
+function buildFetchUrl(uthmUrl: string) {
+  if (PROXY) return `${PROXY}?url=${encodeURIComponent(uthmUrl)}`;
+  return uthmUrl;
+}
 
 export const maxDuration = 30;
 
@@ -25,14 +20,11 @@ export async function GET(request: NextRequest) {
   const timer = setTimeout(() => controller.abort(), 25000);
 
   try {
-    const response = await fetch(
-      `${UTHM_BASE}/simple-search?query=${encodeURIComponent(query)}&location=global`,
-      {
-        cache: "no-store",
-        headers: BROWSER_HEADERS,
-        signal: controller.signal,
-      }
-    );
+    const uthmUrl = `${UTHM_BASE}/simple-search?query=${encodeURIComponent(query)}&location=global`;
+    const response = await fetch(buildFetchUrl(uthmUrl), {
+      cache: "no-store",
+      signal: controller.signal,
+    });
     clearTimeout(timer);
 
     const html = await response.text();
