@@ -3,15 +3,35 @@ import * as cheerio from "cheerio";
 
 const BASE_URL = "http://digitalcollection.uthm.edu.my";
 
+const BROWSER_HEADERS = {
+  "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+  Accept:
+    "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+  "Accept-Language": "en-US,en;q=0.5",
+  "Accept-Encoding": "gzip, deflate",
+  Connection: "keep-alive",
+  Referer: BASE_URL,
+};
+
+export const maxDuration = 30;
+
 export async function GET(request: NextRequest) {
   const handle = request.nextUrl.searchParams.get("handle");
   if (!handle)
     return NextResponse.json({ error: "Handle is required" }, { status: 400 });
 
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 25000);
+
   try {
     const response = await fetch(`${BASE_URL}/handle/${handle}`, {
       cache: "no-store",
+      headers: BROWSER_HEADERS,
+      signal: controller.signal,
     });
+    clearTimeout(timer);
+
     const html = await response.text();
     const $ = cheerio.load(html);
 
@@ -59,6 +79,11 @@ export async function GET(request: NextRequest) {
     data["files"] = files;
     return NextResponse.json({ handle, detail: data });
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    clearTimeout(timer);
+    const isTimeout = err.name === "AbortError";
+    return NextResponse.json(
+      { error: isTimeout ? "UTHM library took too long to respond" : err.message },
+      { status: isTimeout ? 504 : 500 }
+    );
   }
 }
